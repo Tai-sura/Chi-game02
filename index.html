@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      --horse-w: clamp(3.8rem, 12vw, 5.2rem);
+      --horse-w: clamp(3.6rem, 13vw, 5rem);
       --stage-h: clamp(14rem, 42vh, 22rem);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -48,11 +48,10 @@
     .parallax-paused { animation-play-state: paused !important; }
 
     @keyframes gallop {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-4px) rotate(-1deg); }
-      75% { transform: translateY(3px) rotate(1deg); }
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
-    .horse-gallop { animation: gallop 0.25s infinite ease-in-out; }
+    .horse-gallop { animation: gallop 0.28s infinite ease-in-out; will-change: transform; }
     .horse-paused { animation-play-state: paused !important; }
 
     @keyframes impact-shake {
@@ -60,7 +59,7 @@
       20% { transform: translate(-6px, 4px); }
       40% { transform: translate(6px, -4px); }
       60% { transform: translate(-4px, 2px); }
-      80% { transform: translate(3px, -2px); }
+      80% { transform: translate(2px, -2px); }
     }
     .shake { animation: impact-shake 0.25s ease-in-out; }
 
@@ -85,27 +84,55 @@
     .tear-correct { animation: tear-correct 0.45s ease-out forwards; }
     .tear-wrong { animation: tear-wrong 0.4s ease-out forwards; }
 
-    .horse-glow-ink {
-      filter: drop-shadow(0 0 6px rgba(148,163,184,0.35));
-    }
-    .horse-glow-gold {
-      filter: drop-shadow(0 0 8px rgba(251,191,36,0.55));
-    }
-
-    .rider-mount {
-      position: relative;
+    /* 關鍵：绝不在同一元素同時使用 CSS filter + transform 動畫（手機會拆壞圖形） */
+    #horse-player {
+      position: absolute;
+      left: 5%;
+      z-index: 20;
       width: var(--horse-w);
-      height: calc(var(--horse-w) * 0.72);
+      height: calc(var(--horse-w) * 0.9);
+      margin-top: calc(var(--horse-w) * -0.45);
+      transition: top 0.15s ease-out;
+      pointer-events: none;
+    }
+    @media (min-width: 640px) {
+      #horse-player { left: 2.5rem; }
+    }
+    @media (min-width: 768px) {
+      #horse-player { left: 4rem; }
+    }
+    .horse-bob {
+      width: 100%;
+      height: 100%;
       display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
-    .horse-svg {
-      width: var(--horse-w);
-      height: auto;
+    /* 發光放在獨立偽元素，不掛在奔馳動畫層上 */
+    .horse-bob::before {
+      content: '';
+      position: absolute;
+      inset: 8% 4%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(148,163,184,0.35) 0%, transparent 70%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .horse-hot.horse-bob::before {
+      background: radial-gradient(ellipse, rgba(251,191,36,0.45) 0%, transparent 70%);
+    }
+    .horse-emoji {
+      position: relative;
+      z-index: 1;
       display: block;
-      overflow: visible;
-      shape-rendering: geometricPrecision;
+      font-size: var(--horse-w);
+      line-height: 1;
+      transform: scaleX(-1); /* 馬頭朝右迎向戰旗 */
+      -webkit-text-fill-color: initial;
+      filter: none !important;
+      text-shadow: none !important;
+      user-select: none;
     }
 
     .ink-mask {
@@ -257,78 +284,10 @@
 
       <canvas id="fx-canvas" class="absolute inset-0 pointer-events-none z-30"></canvas>
 
-      <div id="horse-player" class="absolute left-[5%] sm:left-10 md:left-16 z-20 transition-all duration-150 ease-out flex items-center" style="top: 25%; transform: translateY(-50%);">
-        <div id="horse-visual" class="horse-gallop relative horse-glow-ink" aria-label="戰馬衝刺">
-          <!-- 依原馬 emoji 樣貌重建：朝右、正常比例、無騎手、無殘影疊圖 -->
-          <svg class="horse-svg" viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-            <defs>
-              <linearGradient id="coat" x1="0.2" y1="0" x2="0.8" y2="1">
-                <stop offset="0%" stop-color="#E0A86A"/>
-                <stop offset="45%" stop-color="#C68642"/>
-                <stop offset="100%" stop-color="#8B5A2B"/>
-              </linearGradient>
-              <linearGradient id="darkhair" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#4B5563"/>
-                <stop offset="100%" stop-color="#111827"/>
-              </linearGradient>
-            </defs>
-            <!-- 地面影 -->
-            <ellipse cx="58" cy="84" rx="36" ry="4.5" fill="#000" opacity="0.25"/>
-            <!-- 後腿（支撐） -->
-            <path d="M38 58 L34 78 L39 78 L43 60 Z" fill="#A16207"/>
-            <path d="M48 60 L46 80 L51 80 L54 62 Z" fill="#92400E"/>
-            <path d="M33 77 h7 v3.5 a1.5 1.5 0 0 1 -1.5 1.5 h-4 a1.5 1.5 0 0 1 -1.5 -1.5 Z" fill="#1f2937"/>
-            <path d="M45 79 h7 v3.5 a1.5 1.5 0 0 1 -1.5 1.5 h-4 a1.5 1.5 0 0 1 -1.5 -1.5 Z" fill="#1f2937"/>
-            <!-- 前腿（抬起奔馳） -->
-            <path d="M78 52 L86 42 L90 45 L84 56 Z" fill="#A16207"/>
-            <path d="M88 44 L98 36 L101 40 L92 50 Z" fill="#92400E"/>
-            <path d="M85 40 h5.5 v3 a1.2 1.2 0 0 1 -1.2 1.2 h-3 a1.2 1.2 0 0 1 -1.3 -1.2 Z" fill="#1f2937"/>
-            <path d="M97 35 h5.5 v3 a1.2 1.2 0 0 1 -1.2 1.2 h-3 a1.2 1.2 0 0 1 -1.3 -1.2 Z" fill="#1f2937"/>
-            <!-- 身軀（正常馬體比例，非長條） -->
-            <path d="M34 52
-                     C34 40, 46 32, 62 32
-                     C74 32, 86 36, 94 44
-                     C96 48, 94 56, 88 58
-                     C78 62, 58 64, 44 60
-                     C36 58, 34 56, 34 52 Z" fill="url(#coat)"/>
-            <!-- 腹部陰影 -->
-            <path d="M42 56 C52 62, 72 62, 86 56 C80 60, 58 62, 44 58 Z" fill="#92400E" opacity="0.35"/>
-            <!-- 臀部 -->
-            <ellipse cx="40" cy="48" rx="12" ry="14" fill="#B45309"/>
-            <!-- 尾巴 -->
-            <path d="M30 44
-                     C18 38, 10 46, 12 58
-                     C16 52, 22 50, 28 52
-                     C26 46, 28 44, 30 44 Z" fill="url(#darkhair)"/>
-            <path d="M28 48 C20 44, 14 50, 16 56 C20 52, 24 50, 28 50 Z" fill="#374151"/>
-            <!-- 頸 -->
-            <path d="M88 44
-                     C92 34, 96 26, 102 22
-                     C106 28, 104 38, 100 46
-                     C96 50, 90 48, 88 44 Z" fill="url(#coat)"/>
-            <!-- 頭（朝右） -->
-            <path d="M100 24
-                     C104 16, 112 14, 118 18
-                     C124 22, 126 30, 122 34
-                     C118 38, 110 36, 104 32
-                     C100 30, 98 28, 100 24 Z" fill="#D97706"/>
-            <!-- 吻白斑 -->
-            <path d="M118 26 C122 28, 124 32, 122 34 C118 32, 116 28, 118 26 Z" fill="#FDE68A"/>
-            <!-- 耳朵 -->
-            <path d="M106 16 L104 8 L110 14 Z" fill="#92400E"/>
-            <path d="M112 14 L114 6 L118 14 Z" fill="#78350F"/>
-            <path d="M106 14 L105 10 L109 13 Z" fill="#FBBF24" opacity="0.5"/>
-            <!-- 鬃毛 -->
-            <path d="M96 22
-                     C88 12, 78 16, 76 26
-                     C82 22, 88 24, 94 30
-                     C96 28, 96 24, 96 22 Z" fill="url(#darkhair)"/>
-            <path d="M92 28 C84 18, 74 22, 72 30 C78 26, 84 28, 90 34 Z" fill="#1f2937"/>
-            <!-- 眼鼻 -->
-            <circle cx="116" cy="24" r="2.2" fill="#111827"/>
-            <circle cx="116.7" cy="23.3" r="0.7" fill="#F9FAFB"/>
-            <ellipse cx="124" cy="30" rx="1.4" ry="1" fill="#111827"/>
-          </svg>
+      <div id="horse-player" style="top: 25%;">
+        <!-- 奔馳動畫只在外層；馬圖本身不做 CSS filter，避免手機碎圖 -->
+        <div id="horse-visual" class="horse-bob horse-gallop" aria-label="戰馬衝刺">
+          <span class="horse-emoji" role="img" aria-hidden="true">🐎</span>
         </div>
       </div>
 
@@ -786,8 +745,8 @@
 
     function updateHorseGlow() {
       const el = document.getElementById('horse-visual');
-      el.classList.toggle('horse-glow-gold', combo >= 3);
-      el.classList.toggle('horse-glow-ink', combo < 3);
+      if (!el) return;
+      el.classList.toggle('horse-hot', combo >= 3);
     }
 
     function calcHitScore() {
