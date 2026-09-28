@@ -590,9 +590,9 @@
     }
 
     function pushGhostTrail(x, y) {
-      if (combo < 3) return;
-      ghostTrails.push({ x, y, life: 1 });
-      if (ghostTrails.length > 3) ghostTrails.shift();
+      if (combo < 5) return;
+      ghostTrails.push({ x, y, life: 0.55 });
+      if (ghostTrails.length > 2) ghostTrails.shift();
     }
 
     function renderFX() {
@@ -601,15 +601,15 @@
         const g = ghostTrails[i];
         if (!isPaused) g.life -= 0.045;
         if (g.life <= 0) { ghostTrails.splice(i, 1); continue; }
-        ctx.globalAlpha = g.life * 0.45;
-        ctx.fillStyle = '#A66B3A';
-        const hw = 28;
-        const hh = 18;
+        ctx.globalAlpha = g.life * 0.28;
+        ctx.fillStyle = '#C68642';
+        const hw = 34;
+        const hh = 20;
         ctx.beginPath();
-        ctx.ellipse(g.x + hw * 0.45, g.y + hh * 0.55, hw * 0.45, hh * 0.32, 0, 0, Math.PI * 2);
+        ctx.ellipse(g.x + hw * 0.42, g.y + hh * 0.55, hw * 0.38, hh * 0.28, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.ellipse(g.x + hw * 0.78, g.y + hh * 0.42, hw * 0.22, hh * 0.2, 0.3, 0, Math.PI * 2);
+        ctx.ellipse(g.x + hw * 0.72, g.y + hh * 0.38, hw * 0.16, hh * 0.18, 0.25, 0, Math.PI * 2);
         ctx.fill();
       }
       for (let i = particles.length - 1; i >= 0; i--) {
@@ -992,8 +992,8 @@
         const horseX = horse.offsetLeft + 40;
 
         ghostTick++;
-        if (combo >= 3 && ghostTick % 5 === 0) {
-          pushGhostTrail(horse.offsetLeft - 8 - Math.random() * 10, horse.offsetTop);
+        if (combo >= 5 && ghostTick % 7 === 0) {
+          pushGhostTrail(horse.offsetLeft - 10 - Math.random() * 8, horse.offsetTop);
         }
 
         if (flagDistanceX <= horseX + 30 && flagDistanceX >= horseX - 30) {
