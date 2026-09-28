@@ -2,10 +2,27 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Uni+ 戰馬奔騰 · 雙軌破障跑酷</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root {
+      --horse-w: clamp(3.4rem, 11vw, 4.6rem);
+      --stage-h: clamp(14rem, 42vh, 22rem);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    body {
+      min-height: 100dvh;
+      padding-bottom: var(--safe-bottom);
+    }
     @keyframes track-move {
       0% { background-position-x: 0; }
       100% { background-position-x: -400px; }
@@ -77,23 +94,17 @@
 
     .rider-mount {
       position: relative;
-      width: 4.75rem;
-      height: 3.5rem;
+      width: var(--horse-w);
+      height: calc(var(--horse-w) * 0.72);
       display: flex;
       align-items: flex-end;
       justify-content: flex-start;
     }
-    @media (min-width: 768px) {
-      .rider-mount { width: 5.5rem; height: 4rem; }
-    }
-    .rider-mount .mount-horse {
-      display: inline-block;
-      font-size: 3rem;
-      line-height: 1;
-      transform: scaleX(-1);
-    }
-    @media (min-width: 768px) {
-      .rider-mount .mount-horse { font-size: 3.5rem; }
+    .horse-svg {
+      width: var(--horse-w);
+      height: auto;
+      display: block;
+      overflow: visible;
     }
 
     .ink-mask {
@@ -117,13 +128,14 @@
     .scroll-ink::-webkit-scrollbar-track { background: transparent; }
 
     .gear-btn {
-      padding: 0.2rem 0.55rem;
+      padding: 0.28rem 0.5rem;
       border-radius: 999px;
-      font-size: 10px;
+      font-size: clamp(9px, 2.6vw, 11px);
       font-weight: 900;
       border: 1px solid transparent;
       transition: all 0.15s;
       white-space: nowrap;
+      line-height: 1.2;
     }
     .gear-btn.active-slow {
       background: rgba(16,185,129,0.25);
@@ -150,10 +162,10 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center font-sans select-none overflow-x-hidden overflow-y-auto touch-none">
+<body class="bg-slate-950 text-slate-100 min-h-[100dvh] flex flex-col items-center font-sans select-none overflow-x-hidden overflow-y-auto touch-manipulation">
 
   <!-- 頂部 HUD -->
-  <header class="w-full max-w-4xl px-4 py-2 flex flex-wrap justify-between items-center gap-2 z-20 bg-slate-900/90 border-b border-slate-800 sticky top-0">
+  <header class="w-full max-w-4xl px-3 sm:px-4 py-2 flex flex-wrap justify-between items-center gap-2 z-20 bg-slate-900/90 border-b border-slate-800 sticky top-0 backdrop-blur">
     <div class="flex items-center space-x-2 min-w-0">
       <span class="bg-amber-500 text-slate-950 font-black text-xs px-2 py-0.5 rounded shadow shrink-0">Uni+ 跑酷獵場</span>
       <span id="poem-title" class="text-xs md:text-sm font-bold text-amber-400 truncate">木蘭詩 · 馳騁出征</span>
@@ -204,14 +216,14 @@
     <div class="bg-slate-900 border-t-2 border-x-2 border-slate-800 rounded-t-2xl py-2 px-4 flex flex-col gap-1.5">
       <div class="flex justify-between items-center text-xs gap-2">
         <span id="line-progress" class="text-amber-500 font-extrabold shrink-0">第 1 / 16 聯</span>
-        <span id="speed-hint" class="text-slate-500 text-[11px] truncate">時速 4.5 · 疾馳 ×1.5</span>
+        <span id="speed-hint" class="text-slate-500 text-[11px] truncate">時速 2.8 · 漫步 ×1.0</span>
         <span class="text-slate-500 text-[11px] hidden md:inline shrink-0">W/S · Space · [ ]</span>
       </div>
       <div id="sentence-preview" class="font-black text-sm md:text-base flex flex-wrap items-end justify-center gap-x-1 gap-y-1 min-h-[2.5rem]"></div>
     </div>
 
     <!-- 跑酷舞台 -->
-    <div id="game-stage" class="relative w-full h-64 sm:h-72 md:h-80 border-2 border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl">
+    <div id="game-stage" class="relative w-full border-2 border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl" style="height: var(--stage-h);">
       <div id="sky-layer" class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-stone-950"></div>
 
       <div id="parallax-far" class="absolute bottom-16 left-0 h-40 w-[200%] opacity-40 pointer-events-none parallax-far">
@@ -244,11 +256,25 @@
 
       <canvas id="fx-canvas" class="absolute inset-0 pointer-events-none z-30"></canvas>
 
-      <div id="horse-player" class="absolute left-10 md:left-16 z-20 transition-all duration-150 ease-out flex items-center" style="top: 25%; transform: translateY(-50%);">
-        <div id="horse-visual" class="horse-gallop relative horse-glow-ink">
-          <div class="rider-mount" aria-label="戰馬衝刺">
-            <span class="mount-horse">🐎</span>
-          </div>
+      <div id="horse-player" class="absolute left-[6%] sm:left-10 md:left-16 z-20 transition-all duration-150 ease-out flex items-center" style="top: 25%; transform: translateY(-50%);">
+        <div id="horse-visual" class="horse-gallop relative horse-glow-ink" aria-label="戰馬衝刺">
+          <!-- 跨平台一致的 SVG 戰馬（朝右迎敵），避免系統 emoji 外觀差異 -->
+          <svg class="horse-svg" viewBox="0 0 128 92" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <ellipse cx="58" cy="84" rx="34" ry="5" fill="#000" opacity="0.28"/>
+            <path d="M28 58c2-16 18-28 40-28 14 0 26 6 34 14 4 4 10 6 14 4 3-1 6 2 4 5-3 4-9 6-14 7l-6 2c-2 8-8 14-18 16-12 2-28 1-38-6-8-6-12-12-16-14z" fill="#8B5A2B"/>
+            <path d="M66 34c10 0 20 5 27 12l6 2c5-1 10 0 13 3 1 1 0 3-1 3-5 1-10-1-13-4l-5-2c-7 7-17 11-28 11-16 0-29-8-34-20 6-3 16-5 35-5z" fill="#A66B3A"/>
+            <path d="M98 42c6 1 12 5 14 10 1 2-1 3-3 2-4-2-8-5-12-7-1-3 0-5 1-5z" fill="#6F4518"/>
+            <path d="M108 48c4 2 7 6 7 9 0 2-2 3-4 2-3-2-5-5-6-8 0-2 1-3 3-3z" fill="#5C3A1A"/>
+            <circle cx="116" cy="54" r="2.2" fill="#1e293b"/>
+            <path d="M104 44c3-5 7-7 11-7 1 0 2 1 1 2-3 2-6 4-9 6-2 0-3-1-3-1z" fill="#4A2F14"/>
+            <path d="M40 58c-1 8-2 16 0 22 1 2 3 2 4 0 1-6 2-14 2-20-2-1-4-2-6-2z" fill="#6F4518"/>
+            <path d="M58 60c0 8 0 16 2 22 1 2 3 2 4 0 0-7 0-14-1-22h-5z" fill="#6F4518"/>
+            <path d="M74 58c1 8 3 16 5 22 1 2 3 2 4 0-1-7-3-14-4-22-2 0-4 0-5 0z" fill="#5C3A1A"/>
+            <path d="M86 56c2 8 5 16 8 22 1 2 3 1 4-1-2-7-5-14-7-21-2 0-4 0-5 0z" fill="#5C3A1A"/>
+            <path d="M48 42c8-2 20-2 30 2-4 6-14 10-26 8-2-3-3-7-4-10z" fill="#166534"/>
+            <path d="M52 44c6-1 14 0 20 2-2 3-8 5-16 4-2-2-3-4-4-6z" fill="#22c55e" opacity="0.85"/>
+            <path d="M34 40c-6 2-12 8-14 14-1 2 1 3 3 2 4-4 8-9 12-12 1-2 0-4-1-4z" fill="#4A2F14"/>
+          </svg>
         </div>
       </div>
 
@@ -522,8 +548,15 @@
         if (!isPaused) g.life -= 0.045;
         if (g.life <= 0) { ghostTrails.splice(i, 1); continue; }
         ctx.globalAlpha = g.life * 0.45;
-        ctx.font = `${canvas.height > 280 ? 42 : 34}px serif`;
-        ctx.fillText('🐎', g.x, g.y + 18);
+        ctx.fillStyle = '#A66B3A';
+        const hw = 28;
+        const hh = 18;
+        ctx.beginPath();
+        ctx.ellipse(g.x + hw * 0.45, g.y + hh * 0.55, hw * 0.45, hh * 0.32, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(g.x + hw * 0.78, g.y + hh * 0.42, hw * 0.22, hh * 0.2, 0.3, 0, Math.PI * 2);
+        ctx.fill();
       }
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
