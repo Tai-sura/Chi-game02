@@ -8,8 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root {
-      --horse-w: clamp(3.6rem, 13vw, 5rem);
-      --stage-h: clamp(14rem, 42vh, 22rem);
+      --horse-w: clamp(3.6rem, 8vmin, 6.5rem);
+      --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
     html, body {
@@ -20,8 +20,25 @@
       text-size-adjust: 100%;
     }
     body {
-      min-height: 100dvh;
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100dvh;
+      padding-top: var(--safe-top);
       padding-bottom: var(--safe-bottom);
+      overflow: hidden;
+    }
+    /* 矮視窗改為整頁滾動，避免舞台被裁掉 */
+    @media (max-height: 560px) {
+      body {
+        height: auto;
+        max-height: none;
+        min-height: 100dvh;
+        overflow-y: auto;
+      }
+      #game-stage {
+        flex: 1 0 13rem;
+        min-height: 13rem;
+      }
     }
     @keyframes track-move {
       0% { background-position-x: 0; }
@@ -190,10 +207,10 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-[100dvh] flex flex-col items-center font-sans select-none overflow-x-hidden overflow-y-auto touch-manipulation">
+<body class="bg-slate-950 text-slate-100 flex flex-col items-stretch font-sans select-none touch-manipulation">
 
   <!-- 頂部 HUD -->
-  <header class="w-full max-w-4xl px-3 sm:px-4 py-2 flex flex-wrap justify-between items-center gap-2 z-20 bg-slate-900/90 border-b border-slate-800 sticky top-0 backdrop-blur">
+  <header class="w-full shrink-0 px-3 sm:px-4 py-1.5 flex flex-wrap justify-between items-center gap-x-3 gap-y-1 z-20 bg-slate-900/90 border-b border-slate-800 backdrop-blur">
     <div class="flex items-center space-x-2 min-w-0">
       <span class="bg-amber-500 text-slate-950 font-black text-xs px-2 py-0.5 rounded shadow shrink-0">Uni+ 跑酷獵場</span>
       <span id="poem-title" class="text-xs md:text-sm font-bold text-amber-400 truncate">木蘭詩</span>
@@ -220,7 +237,7 @@
   </header>
 
   <!-- 關卡切換 + 配速檔位 -->
-  <div class="w-full max-w-4xl px-4 pt-2 flex flex-wrap items-end justify-between gap-2 z-20">
+  <div class="w-full shrink-0 px-3 sm:px-4 pt-1.5 flex flex-wrap items-end justify-between gap-2 z-20">
     <div class="flex gap-2">
       <button onclick="switchPoem('mulan')" id="tab-mulan" class="px-3 py-1 text-xs font-black rounded-t-lg bg-amber-500 text-slate-950 transition-all">
         🐎 木蘭詩（雙軌出征）
@@ -239,9 +256,9 @@
     </div>
   </div>
 
-  <main class="w-full max-w-4xl flex-1 px-4 pb-3 flex flex-col justify-start md:justify-center gap-0">
+  <main class="w-full flex-1 min-h-0 px-2 sm:px-3 lg:px-4 pb-2 flex flex-col justify-start gap-0">
     <!-- 句條 + 文法鷹架 -->
-    <div class="bg-slate-900 border-t-2 border-x-2 border-slate-800 rounded-t-2xl py-2 px-4 flex flex-col gap-1.5">
+    <div class="shrink-0 bg-slate-900 border-t-2 border-x-2 border-slate-800 rounded-t-2xl py-1.5 px-3 sm:px-4 flex flex-col gap-1">
       <div class="flex justify-between items-center text-xs gap-2">
         <span id="line-progress" class="text-amber-500 font-extrabold shrink-0">第 1 / 16 聯</span>
         <span class="text-slate-500 text-[11px] hidden md:inline shrink-0">W/S · Space · [ ]</span>
@@ -250,10 +267,10 @@
     </div>
 
     <!-- 跑酷舞台 -->
-    <div id="game-stage" class="relative w-full border-2 border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl" style="height: var(--stage-h);">
+    <div id="game-stage" class="relative w-full flex-1 min-h-[11rem] border-2 border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl">
       <div id="sky-layer" class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-stone-950"></div>
 
-      <div id="parallax-far" class="absolute bottom-16 left-0 h-40 w-[200%] opacity-40 pointer-events-none parallax-far">
+      <div id="parallax-far" class="absolute bottom-[12%] left-0 h-[42%] w-[200%] opacity-40 pointer-events-none parallax-far">
         <svg class="w-1/2 h-full inline-block" viewBox="0 0 800 200" preserveAspectRatio="none">
           <path d="M0,200 L80,110 L160,150 L260,70 L360,140 L450,55 L560,130 L680,80 L800,200 Z" fill="#334155"></path>
         </svg>
@@ -261,7 +278,7 @@
           <path d="M0,200 L100,90 L200,145 L300,60 L420,135 L520,50 L640,120 L740,75 L800,200 Z" fill="#334155"></path>
         </svg>
       </div>
-      <div id="parallax-mid" class="absolute bottom-10 left-0 h-28 w-[200%] opacity-55 pointer-events-none parallax-mid">
+      <div id="parallax-mid" class="absolute bottom-[8%] left-0 h-[32%] w-[200%] opacity-55 pointer-events-none parallax-mid">
         <svg class="w-1/2 h-full inline-block" viewBox="0 0 800 140" preserveAspectRatio="none">
           <path d="M0,140 L60,90 L140,115 L220,55 L320,100 L420,45 L530,95 L650,60 L740,100 L800,140 Z" fill="#1e293b"></path>
           <ellipse id="sun-orb" cx="620" cy="48" rx="28" ry="28" fill="#f59e0b" opacity="0.35"></ellipse>
@@ -270,7 +287,7 @@
           <path d="M0,140 L90,85 L180,110 L280,50 L380,95 L480,40 L590,90 L700,55 L800,140 Z" fill="#1e293b"></path>
         </svg>
       </div>
-      <div id="wave-layer" class="absolute bottom-8 left-0 right-0 h-10 opacity-30 pointer-events-none hidden">
+      <div id="wave-layer" class="absolute bottom-[6%] left-0 right-0 h-[14%] opacity-30 pointer-events-none hidden">
         <svg class="w-full h-full" viewBox="0 0 800 40" preserveAspectRatio="none">
           <path d="M0,28 Q50,10 100,28 T200,28 T300,28 T400,28 T500,28 T600,28 T700,28 T800,28 V40 H0 Z" fill="#38bdf8"></path>
         </svg>
@@ -332,16 +349,16 @@
     </div>
 
     <!-- 破陣詩卷 -->
-    <div id="verses-drawer" class="mt-2 rounded-xl border border-amber-700/40 bg-gradient-to-b from-[#1a1510]/95 to-slate-950/95 shadow-inner overflow-hidden">
-      <div class="flex items-center justify-end px-3 py-1.5 border-b border-amber-800/30">
+    <div id="verses-drawer" class="shrink-0 mt-1.5 rounded-xl border border-amber-700/40 bg-gradient-to-b from-[#1a1510]/95 to-slate-950/95 shadow-inner overflow-hidden">
+      <div class="flex items-center justify-end px-3 py-1 border-b border-amber-800/30">
         <span id="verses-count" class="text-[10px] text-slate-500 font-bold">0 / 16 聯</span>
       </div>
-      <div id="verses-list" class="scroll-ink px-3 py-2 h-[84px] md:h-[96px] overflow-y-auto space-y-1.5 text-sm">
-        <div id="verses-empty" class="text-slate-600 text-xs italic text-center py-5">破障成功的詩句將在此點亮成卷……</div>
+      <div id="verses-list" class="scroll-ink px-3 py-1.5 h-[clamp(2.75rem,8vh,4.25rem)] overflow-y-auto space-y-1.5 text-sm">
+        <div id="verses-empty" class="text-slate-600 text-xs italic text-center py-2">破障成功的詩句將在此點亮成卷……</div>
       </div>
     </div>
 
-    <div class="mt-2 flex justify-center gap-3 md:hidden">
+    <div class="shrink-0 mt-1.5 flex justify-center gap-3 md:hidden">
       <button onclick="changeLane(0)" class="flex-1 py-2.5 bg-slate-800 active:bg-amber-600 border border-slate-700 rounded-xl font-black text-sm text-slate-200 shadow">⬆️ 上道</button>
       <button onclick="changeLane(1)" class="flex-1 py-2.5 bg-slate-800 active:bg-amber-600 border border-slate-700 rounded-xl font-black text-sm text-slate-200 shadow">⬇️ 下道</button>
     </div>
@@ -533,10 +550,36 @@
     let ghostTrails = [];
 
     function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      if (w < 1 || h < 1) return;
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
     }
-    window.addEventListener('resize', resizeCanvas);
+    /* 舞台變寬時按比例加快位移，使衝到戰馬的時間與原本 max-w-4xl 舞台一致 */
+    const STAGE_REF_W = 860;
+    function layoutSpeedScale() {
+      const stage = document.getElementById('game-stage');
+      const w = stage ? stage.clientWidth : STAGE_REF_W;
+      return Math.max(1, Math.min(2.75, w / STAGE_REF_W));
+    }
+    let lastStageW = 0;
+    function syncStageLayout() {
+      resizeCanvas();
+      const w = canvas.parentElement ? canvas.parentElement.clientWidth : 0;
+      if (w && w !== lastStageW) {
+        lastStageW = w;
+        applyRoadDuration();
+      }
+    }
+    window.addEventListener('resize', syncStageLayout);
+    if (window.ResizeObserver) {
+      new ResizeObserver(syncStageLayout).observe(document.getElementById('game-stage'));
+    }
 
     function spawnShatterParticles(x, y, mode) {
       const count = mode === 'ink' ? 28 : 22;
@@ -665,7 +708,8 @@
     }
 
     function applyRoadDuration() {
-      const duration = currentGear().roadDuration;
+      const seconds = parseFloat(currentGear().roadDuration);
+      const duration = (Number.isFinite(seconds) ? seconds / layoutSpeedScale() : 1.45) + 's';
       const road = document.getElementById('road-layer');
       document.documentElement.style.setProperty('--road-duration', duration);
       if (!road) return;
@@ -997,7 +1041,7 @@
       if (token !== loopToken) return;
 
       if (!isPaused && isSpawning && !collisionHandled) {
-        flagDistanceX -= currentSpeed;
+        flagDistanceX -= currentSpeed * layoutSpeedScale();
 
         const flagTop = document.getElementById('flag-top');
         const flagBottom = document.getElementById('flag-bottom');
@@ -1184,7 +1228,7 @@
     });
 
     window.onload = () => {
-      resizeCanvas();
+      syncStageLayout();
       applyTheme();
       forceWalkGear();
       updateHeroVisual();
