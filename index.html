@@ -207,6 +207,90 @@
       border-color: #334155;
       color: #94a3b8;
     }
+
+    #sky-layer { transition: background 1.5s ease; }
+    #game-stage { transition: box-shadow 0.45s ease; }
+    #game-stage.rhetoric-streak {
+      box-shadow: 0 0 0 2px #fbbf24, 0 0 28px rgba(251,191,36,0.55);
+    }
+    .rhetoric-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.08rem 0.45rem;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #fde68a;
+      background: rgba(251,191,36,0.16);
+      border: 1px solid rgba(251,191,36,0.75);
+      box-shadow: 0 0 12px rgba(251,191,36,0.45);
+      white-space: nowrap;
+    }
+    .rhetoric-pill-court {
+      color: #d6f5e3;
+      background: rgba(16,185,129,0.14);
+      border-color: rgba(214,180,138,0.8);
+      box-shadow: 0 0 12px rgba(180,140,70,0.4);
+    }
+    .scene-chip {
+      font-size: 10px;
+      font-weight: 800;
+      color: #e2e8f0;
+      background: rgba(15,23,42,0.45);
+      border: 1px solid rgba(226,232,240,0.25);
+      border-radius: 999px;
+      padding: 0.05rem 0.4rem;
+      white-space: nowrap;
+    }
+    .story-fx { opacity: 0; transition: opacity 1.5s ease; }
+    .story-fx.stars,
+    .story-fx.embers,
+    .story-fx.petals { opacity: 1; }
+    .story-fx.stars::before,
+    .story-fx.embers::before,
+    .story-fx.petals::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .story-fx.stars::before {
+      background-image:
+        radial-gradient(1.4px 1.4px at 12% 22%, #fff, transparent),
+        radial-gradient(1.2px 1.2px at 28% 14%, #e0f2fe, transparent),
+        radial-gradient(1.6px 1.6px at 46% 30%, #fff, transparent),
+        radial-gradient(1px 1px at 63% 18%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 78% 28%, #e0f2fe, transparent),
+        radial-gradient(1.2px 1.2px at 88% 12%, #fff, transparent),
+        radial-gradient(1px 1px at 18% 42%, #fff, transparent),
+        radial-gradient(1.3px 1.3px at 54% 8%, #fff, transparent);
+      animation: twinkle 2.8s ease-in-out infinite;
+    }
+    .story-fx.embers::before {
+      background-image: radial-gradient(circle, #fb7185 1.3px, transparent 1.8px);
+      background-size: 42px 56px;
+      animation: ember-rise 7s linear infinite;
+      opacity: 0.55;
+    }
+    .story-fx.petals::before {
+      background-image: radial-gradient(circle, #fda4af 1.5px, transparent 2px);
+      background-size: 52px 70px;
+      animation: petal-fall 9s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.35; }
+      50% { opacity: 1; }
+    }
+    @keyframes ember-rise {
+      from { transform: translateY(12%); }
+      to { transform: translateY(-18%); }
+    }
+    @keyframes petal-fall {
+      from { transform: translateY(-16%); }
+      to { transform: translateY(14%); }
+    }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 flex flex-col items-stretch font-sans select-none touch-manipulation">
@@ -223,8 +307,9 @@
         class="px-2.5 py-1 rounded-lg bg-cyan-500/15 border-2 border-cyan-400 text-cyan-200 text-[11px] md:text-xs font-black hover:bg-cyan-500/25 active:scale-95 transition-all shadow-[0_0_12px_rgba(34,211,238,0.25)]">
         ⏸️ 勒馬調息
       </button>
-      <div class="flex items-center space-x-1.5">
-        <span class="text-xs text-slate-400 hidden sm:inline">心力:</span>
+      <div class="flex items-center space-x-1.5" id="hp-wrap">
+        <span id="hp-label" class="text-[10px] sm:text-xs text-slate-400 font-bold">心力</span>
+        <span id="hp-mood" class="hidden text-[10px] text-rose-300/90 font-bold">伴君如伴虎</span>
         <div class="w-14 md:w-24 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700">
           <div id="hp-bar" class="bg-gradient-to-r from-emerald-400 to-teal-400 h-full w-full transition-all duration-300"></div>
         </div>
@@ -262,7 +347,11 @@
     <!-- 句條 + 文法鷹架 -->
     <div class="shrink-0 bg-slate-900 border-t-2 border-x-2 border-slate-800 rounded-t-2xl py-1.5 px-3 sm:px-4 flex flex-col gap-1">
       <div class="flex justify-between items-center text-xs gap-2">
-        <span id="line-progress" class="text-amber-500 font-extrabold shrink-0">第 1 / 16 聯</span>
+        <span class="flex items-center gap-1.5 min-w-0 flex-wrap">
+          <span id="line-progress" class="text-amber-500 font-extrabold shrink-0">第 1 / 16 聯</span>
+          <span id="scene-chip" class="scene-chip hidden">閨房籌備</span>
+          <span id="rhetoric-tag" class="rhetoric-pill hidden">【疊詞】</span>
+        </span>
         <span class="text-slate-500 text-[11px] hidden md:inline shrink-0">W/S · Space · [ ]</span>
       </div>
       <div id="sentence-preview" class="font-black text-2xl md:text-3xl flex flex-wrap items-center justify-center gap-x-1 gap-y-1 min-h-[3rem]"></div>
@@ -270,7 +359,8 @@
 
     <!-- 跑酷舞台 -->
     <div id="game-stage" class="relative w-full flex-1 min-h-[11rem] border-2 border-slate-800 rounded-b-2xl overflow-hidden shadow-2xl">
-      <div id="sky-layer" class="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-stone-950"></div>
+      <div id="sky-layer" class="absolute inset-0"></div>
+      <div id="story-fx" class="story-fx absolute inset-0 pointer-events-none"></div>
 
       <div id="parallax-far" class="absolute bottom-[12%] left-0 h-[42%] w-[200%] opacity-40 pointer-events-none parallax-far">
         <svg class="w-1/2 h-full inline-block" viewBox="0 0 800 200" preserveAspectRatio="none">
@@ -368,7 +458,7 @@
 
   <!-- 通關報告 -->
   <div id="report-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-[60] hidden">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl max-w-md w-full p-6 text-slate-100 shadow-[0_0_50px_rgba(245,158,11,0.25)]">
+    <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl max-w-md w-full max-h-[92dvh] overflow-y-auto p-6 text-slate-100 shadow-[0_0_50px_rgba(245,158,11,0.25)]">
       <div class="text-center">
         <div class="text-4xl">🏆</div>
       </div>
@@ -386,6 +476,14 @@
           <span id="stat-combo" class="text-emerald-400 font-extrabold text-sm">0 連斬</span>
         </div>
       </div>
+      <div id="perfect-badge" class="hidden mb-3 text-center text-sm font-black text-amber-300 bg-amber-500/10 border border-amber-400/50 rounded-xl py-2">🌟 一字不漏・文曲星下凡！</div>
+      <div id="mistake-panel" class="hidden mb-3">
+        <div class="text-xs font-black text-amber-200 mb-1.5">📜 本局錯題錦囊（溫故知新）</div>
+        <div id="mistake-scroll" class="scroll-ink max-h-36 overflow-y-auto space-y-1.5 text-xs bg-slate-950/70 border border-slate-800 rounded-xl p-2.5"></div>
+      </div>
+      <button id="retry-mistakes" onclick="startMistakeReview()" class="hidden w-full mb-2 py-2.5 bg-slate-800 border border-amber-500/50 text-amber-200 font-black rounded-xl text-sm active:scale-95">
+        🔄 專攻錯題
+      </button>
       <button onclick="restartGame()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black rounded-xl text-sm shadow-lg active:scale-95">
         馳騁下一篇章
       </button>
@@ -399,22 +497,22 @@
         heroName: "木蘭",
         theme: "camp",
         lines: [
-          { chunks: ["唧唧", "復唧唧"], traps: ["默默", "又唧唧"], roles: ["擬聲詞", "反復疊詞"], meaning: "織布機唧唧地響了又響。" },
-          { chunks: ["木蘭", "當戶", "織"], traps: ["秀英", "在戶", "職"], roles: ["人名", "方位動詞", "動作"], meaning: "木蘭對著門在織布。" },
-          { chunks: ["不聞", "機杼聲"], traps: ["難聞", "機抒聲"], roles: ["否定感知", "器物聲"], meaning: "聽不見織布機的聲音了。" },
-          { chunks: ["唯聞", "女歎息"], traps: ["但見", "女長歎"], roles: ["唯一感知", "情感詞"], meaning: "只聽見女兒在歎氣。" },
-          { chunks: ["問女", "何所", "思"], traps: ["問兒", "為誰", "愁"], roles: ["設問", "疑問結構", "心理動詞"], meaning: "問女兒在想什麼。" },
-          { chunks: ["問女", "何所", "憶"], traps: ["問妹", "為誰", "慮"], roles: ["設問", "疑問結構", "回憶動詞"], meaning: "問女兒在思念什麼。" },
-          { chunks: ["女亦", "無所", "思"], traps: ["兒身", "毫無", "想"], roles: ["主語", "否定結構", "心理"], meaning: "女兒也沒有在想什麼。" },
-          { chunks: ["女亦", "無所", "憶"], traps: ["兒心", "毫無", "意"], roles: ["主語", "否定結構", "回憶"], meaning: "女兒也沒有在思念什麼。" },
-          { chunks: ["昨夜", "見軍帖"], traps: ["前朝", "看軍書"], roles: ["時間詞", "事件動詞"], meaning: "昨夜看見了徵兵的文書。" },
-          { chunks: ["可汗", "大", "點兵"], traps: ["皇帝", "廣", "選兵"], roles: ["君主稱謂", "程度副詞", "軍事動詞"], meaning: "可汗大規模地徵兵。" },
-          { chunks: ["軍書", "十二卷"], traps: ["文書", "萬千卷"], roles: ["公文名詞", "數量詞"], meaning: "徵兵名冊有很多卷。" },
-          { chunks: ["卷卷", "有爺名"], traps: ["頁頁", "有父名"], roles: ["疊詞", "親屬詞"], meaning: "每一卷都有父親的名字。" },
-          { chunks: ["阿爺", "無大兒"], traps: ["老父", "少長兒"], roles: ["親屬", "否定狀態"], meaning: "父親沒有成年的兒子。" },
-          { chunks: ["木蘭", "無長兄"], traps: ["家中", "缺大兄"], roles: ["人名", "家庭結構"], meaning: "木蘭沒有哥哥。" },
-          { chunks: ["願為", "市", "鞍馬"], traps: ["願去", "買", "戰馬"], roles: ["意願", "動詞", "器物"], meaning: "願意去買馬鞍和馬匹。" },
-          { chunks: ["從此", "替爺", "征"], traps: ["如今", "代父", "行"], roles: ["時間轉折", "替代關係", "征戰動詞"], meaning: "從此代替父親出征。" }
+          { tag: "疊詞", chunks: ["唧唧", "復唧唧"], traps: ["默默", "又唧唧"], roles: ["擬聲詞", "反復疊詞"], meaning: "織布機唧唧地響了又響。" },
+          { tag: "白描", chunks: ["木蘭", "當戶", "織"], traps: ["秀英", "在戶", "職"], roles: ["人名", "方位動詞", "動作"], meaning: "木蘭對著門在織布。" },
+          { tag: "對偶", chunks: ["不聞", "機杼聲"], traps: ["難聞", "機抒聲"], roles: ["否定感知", "器物聲"], meaning: "聽不見織布機的聲音了。" },
+          { tag: "對偶", chunks: ["唯聞", "女歎息"], traps: ["但見", "女長歎"], roles: ["唯一感知", "情感詞"], meaning: "只聽見女兒在歎氣。" },
+          { tag: "設問", chunks: ["問女", "何所", "思"], traps: ["問兒", "為誰", "愁"], roles: ["設問", "疑問結構", "心理動詞"], meaning: "問女兒在想什麼。" },
+          { tag: "複沓", chunks: ["問女", "何所", "憶"], traps: ["問妹", "為誰", "慮"], roles: ["設問", "疑問結構", "回憶動詞"], meaning: "問女兒在思念什麼。" },
+          { tag: "複沓", chunks: ["女亦", "無所", "思"], traps: ["兒身", "毫無", "想"], roles: ["主語", "否定結構", "心理"], meaning: "女兒也沒有在想什麼。" },
+          { tag: "複沓", chunks: ["女亦", "無所", "憶"], traps: ["兒心", "毫無", "意"], roles: ["主語", "否定結構", "回憶"], meaning: "女兒也沒有在思念什麼。" },
+          { tag: "敘事", chunks: ["昨夜", "見軍帖"], traps: ["前朝", "看軍書"], roles: ["時間詞", "事件動詞"], meaning: "昨夜看見了徵兵的文書。" },
+          { tag: "借代", chunks: ["可汗", "大", "點兵"], traps: ["皇帝", "廣", "選兵"], roles: ["君主稱謂", "程度副詞", "軍事動詞"], meaning: "可汗大規模地徵兵。" },
+          { tag: "誇張", chunks: ["軍書", "十二卷"], traps: ["文書", "萬千卷"], roles: ["公文名詞", "數量詞"], meaning: "徵兵名冊有很多卷。十二是虛數。" },
+          { tag: "頂真", chunks: ["卷卷", "有爺名"], traps: ["頁頁", "有父名"], roles: ["疊詞", "親屬詞"], meaning: "每一卷都有父親的名字。承接上句「卷」。" },
+          { tag: "對偶", chunks: ["阿爺", "無大兒"], traps: ["老父", "少長兒"], roles: ["親屬", "否定狀態"], meaning: "父親沒有成年的兒子。" },
+          { tag: "對偶", chunks: ["木蘭", "無長兄"], traps: ["家中", "缺大兄"], roles: ["人名", "家庭結構"], meaning: "木蘭沒有哥哥。" },
+          { tag: "詞類活用", chunks: ["願為", "市", "鞍馬"], traps: ["願去", "買", "戰馬"], roles: ["意願", "動詞", "器物"], meaning: "願意去買馬鞍和馬匹。「市」是名詞作動詞。" },
+          { tag: "承上", chunks: ["從此", "替爺", "征"], traps: ["如今", "代父", "行"], roles: ["時間轉折", "替代關係", "征戰動詞"], meaning: "從此代替父親出征。" }
         ]
       },
       yangxiu: {
@@ -423,41 +521,41 @@
         theme: "farewell",
         quiz: "vocab",
         lines: [
-          { word: "欲", example: "欲要進兵", chunks: ["打算"], traps: ["將要"], roles: ["動詞"], meaning: "「欲」解作打算。" },
-          { word: "恐", example: "又恐被蜀兵恥笑", chunks: ["怕"], traps: ["恐嚇"], roles: ["動詞"], meaning: "「恐」解作怕。" },
-          { word: "適", example: "適庖官進雞湯", chunks: ["適逢"], traps: ["舒適"], roles: ["副詞"], meaning: "「適」解作適逢。" },
-          { word: "教", example: "便教隨行軍士", chunks: ["讓、令"], traps: ["教導"], roles: ["動詞"], meaning: "「教」解作讓、令。" },
-          { word: "遂", example: "遂請楊修至帳中", chunks: ["於是"], traps: ["竟然"], roles: ["副詞"], meaning: "「遂」解作於是。" },
-          { word: "何", example: "公何收拾行裝？", chunks: ["為甚麼"], traps: ["哪裡"], roles: ["疑問代詞"], meaning: "「何」解作為甚麼。" },
-          { word: "不日", example: "便知魏王不日將退兵歸也", chunks: ["未來數天"], traps: ["當天"], roles: ["名詞"], meaning: "「不日」解作未來數天。" },
-          { word: "益", example: "在此無益", chunks: ["益處、好處"], traps: ["更加"], roles: ["名詞"], meaning: "「益」解作益處、好處。" },
-          { word: "班師", example: "來日魏王必班師矣", chunks: ["調回軍隊"], traps: ["出征"], roles: ["動詞"], meaning: "「班師」解作調回軍隊。" },
-          { word: "肺腑", example: "公真知魏王肺腑也", chunks: ["內心"], traps: ["五臟"], roles: ["名詞"], meaning: "「肺腑」解作內心。" },
-          { word: "遂", example: "遂亦收拾行裝", chunks: ["於是"], traps: ["終於"], roles: ["副詞"], meaning: "「遂」解作於是。" },
-          { word: "故", example: "急回帳召惇問其故", chunks: ["緣故、原因"], traps: ["所以"], roles: ["名詞"], meaning: "「故」解作緣故、原因。" },
-          { word: "汝", example: "汝怎敢造言亂我軍心？", chunks: ["你"], traps: ["他"], roles: ["人稱代詞"], meaning: "「汝」解作你。" },
-          { word: "對", example: "修以雞肋之意對", chunks: ["回答"], traps: ["正確"], roles: ["動詞"], meaning: "「對」解作回答。" },
-          { word: "數", reading: "朔", example: "數犯曹操之忌", chunks: ["多次、屢次"], traps: ["數目"], roles: ["副詞"], meaning: "「數」音朔，解作多次、屢次。" },
-          { word: "嘗", example: "操嘗造花園一所", chunks: ["曾經"], traps: ["嘗試"], roles: ["副詞"], meaning: "「嘗」解作曾經。" },
-          { word: "曉", example: "人皆不曉其意", chunks: ["明白、知曉"], traps: ["早晨"], roles: ["動詞"], meaning: "「曉」解作明白、知曉。" },
-          { word: "停當", example: "改造停當", chunks: ["妥當"], traps: ["停止"], roles: ["動詞"], meaning: "「停當」解作妥當。" },
-          { word: "吾", example: "誰知吾意？", chunks: ["我"], traps: ["你"], roles: ["人稱代詞"], meaning: "「吾」解作我。" },
-          { word: "置", example: "置之案頭", chunks: ["放置、放在"], traps: ["設立"], roles: ["動詞"], meaning: "「置」解作放置、放在。" },
-          { word: "訖", reading: "屹", example: "竟取匙與眾分食訖", chunks: ["完畢"], traps: ["乞求"], roles: ["動詞"], meaning: "「訖」音屹，解作完畢。" },
-          { word: "豈", example: "豈敢違丞相之命乎？", chunks: ["怎"], traps: ["竟然"], roles: ["副詞"], meaning: "「豈」解作怎。" },
-          { word: "惡", example: "心惡之", chunks: ["討厭、厭惡"], traps: ["凶惡"], roles: ["動詞"], meaning: "「惡」解作討厭、厭惡。" },
-          { word: "左右", example: "常吩咐左右", chunks: ["侍從／手下"], traps: ["兩旁"], roles: ["名詞"], meaning: "「左右」解作侍從／手下。" },
-          { word: "半晌", example: "半晌而起", chunks: ["半天"], traps: ["半夜"], roles: ["名詞"], meaning: "「半晌」解作半天。" },
-          { word: "佯", reading: "羊", example: "佯驚問", chunks: ["假裝"], traps: ["真正"], roles: ["動詞"], meaning: "「佯」音羊，解作假裝。" },
-          { word: "皆", example: "人皆以為操果夢中殺人", chunks: ["都"], traps: ["已經"], roles: ["副詞"], meaning: "「皆」解作都。" },
-          { word: "愈", example: "操聞而愈惡之", chunks: ["越來越"], traps: ["痊癒"], roles: ["副詞"], meaning: "「愈」解作越來越。" },
-          { word: "愛", example: "愛修之才", chunks: ["愛慕"], traps: ["可惜"], roles: ["動詞"], meaning: "「愛」解作愛慕。" },
-          { word: "逕", example: "逕來告操", chunks: ["直接"], traps: ["小路"], roles: ["副詞"], meaning: "「逕」解作直接。" },
-          { word: "惑", example: "再入以惑之", chunks: ["迷惑"], traps: ["或者"], roles: ["動詞"], meaning: "「惑」解作迷惑。" },
-          { word: "至", example: "曹丕先至", chunks: ["來到"], traps: ["至於"], roles: ["動詞"], meaning: "「至」解作來到。" },
-          { word: "阻當", example: "如有阻當者", chunks: ["阻擋"], traps: ["應當"], roles: ["動詞"], meaning: "「阻當」解作阻擋。" },
-          { word: "伺", example: "操令人於丕府門伺察之", chunks: ["守候"], traps: ["飼養"], roles: ["動詞"], meaning: "「伺」解作守候。" },
-          { word: "譖", reading: "浸", example: "操因疑修譖害曹丕", chunks: ["誣陷、中傷"], traps: ["稱讚"], roles: ["動詞"], meaning: "「譖」音浸，解作誣陷、中傷。" }
+          { tag: "一詞多義", word: "欲", example: "欲要進兵", chunks: ["打算"], traps: ["將要"], roles: ["動詞"], meaning: "「欲」解作打算。" },
+          { tag: "一詞多義", word: "恐", example: "又恐被蜀兵恥笑", chunks: ["怕"], traps: ["恐嚇"], roles: ["動詞"], meaning: "「恐」解作怕。" },
+          { tag: "一詞多義", word: "適", example: "適庖官進雞湯", chunks: ["適逢"], traps: ["舒適"], roles: ["副詞"], meaning: "「適」解作適逢。" },
+          { tag: "一詞多義", word: "教", example: "便教隨行軍士", chunks: ["讓、令"], traps: ["教導"], roles: ["動詞"], meaning: "「教」解作讓、令。" },
+          { tag: "一詞多義", word: "遂", example: "遂請楊修至帳中", chunks: ["於是"], traps: ["竟然"], roles: ["副詞"], meaning: "「遂」解作於是。" },
+          { tag: "一詞多義", word: "何", example: "公何收拾行裝？", chunks: ["為甚麼"], traps: ["哪裡"], roles: ["疑問代詞"], meaning: "「何」解作為甚麼。" },
+          { tag: "古今異義", word: "不日", example: "便知魏王不日將退兵歸也", chunks: ["未來數天"], traps: ["當天"], roles: ["名詞"], meaning: "「不日」解作未來數天。" },
+          { tag: "一詞多義", word: "益", example: "在此無益", chunks: ["益處、好處"], traps: ["更加"], roles: ["名詞"], meaning: "「益」解作益處、好處。" },
+          { tag: "古今異義", word: "班師", example: "來日魏王必班師矣", chunks: ["調回軍隊"], traps: ["出征"], roles: ["動詞"], meaning: "「班師」解作調回軍隊。" },
+          { tag: "比喻", word: "肺腑", example: "公真知魏王肺腑也", chunks: ["內心"], traps: ["五臟"], roles: ["名詞"], meaning: "「肺腑」解作內心。" },
+          { tag: "一詞多義", word: "遂", example: "遂亦收拾行裝", chunks: ["於是"], traps: ["終於"], roles: ["副詞"], meaning: "「遂」解作於是。" },
+          { tag: "一詞多義", word: "故", example: "急回帳召惇問其故", chunks: ["緣故、原因"], traps: ["所以"], roles: ["名詞"], meaning: "「故」解作緣故、原因。" },
+          { tag: "人稱代詞", word: "汝", example: "汝怎敢造言亂我軍心？", chunks: ["你"], traps: ["他"], roles: ["人稱代詞"], meaning: "「汝」解作你。" },
+          { tag: "一詞多義", word: "對", example: "修以雞肋之意對", chunks: ["回答"], traps: ["正確"], roles: ["動詞"], meaning: "「對」解作回答。" },
+          { tag: "破音字", word: "數", reading: "朔", example: "數犯曹操之忌", chunks: ["多次、屢次"], traps: ["數目"], roles: ["副詞"], meaning: "「數」音朔，解作多次、屢次。" },
+          { tag: "一詞多義", word: "嘗", example: "操嘗造花園一所", chunks: ["曾經"], traps: ["嘗試"], roles: ["副詞"], meaning: "「嘗」解作曾經。" },
+          { tag: "一詞多義", word: "曉", example: "人皆不曉其意", chunks: ["明白、知曉"], traps: ["早晨"], roles: ["動詞"], meaning: "「曉」解作明白、知曉。" },
+          { tag: "古今異義", word: "停當", example: "改造停當", chunks: ["妥當"], traps: ["停止"], roles: ["動詞"], meaning: "「停當」解作妥當。" },
+          { tag: "人稱代詞", word: "吾", example: "誰知吾意？", chunks: ["我"], traps: ["你"], roles: ["人稱代詞"], meaning: "「吾」解作我。" },
+          { tag: "一詞多義", word: "置", example: "置之案頭", chunks: ["放置、放在"], traps: ["設立"], roles: ["動詞"], meaning: "「置」解作放置、放在。" },
+          { tag: "詞義", word: "訖", reading: "屹", example: "竟取匙與眾分食訖", chunks: ["完畢"], traps: ["乞求"], roles: ["動詞"], meaning: "「訖」音屹，解作完畢。" },
+          { tag: "反詰", word: "豈", example: "豈敢違丞相之命乎？", chunks: ["怎"], traps: ["竟然"], roles: ["副詞"], meaning: "「豈」解作怎。" },
+          { tag: "破音字", word: "惡", example: "心惡之", chunks: ["討厭、厭惡"], traps: ["凶惡"], roles: ["動詞"], meaning: "「惡」解作討厭、厭惡。" },
+          { tag: "古今異義", word: "左右", example: "常吩咐左右", chunks: ["侍從／手下"], traps: ["兩旁"], roles: ["名詞"], meaning: "「左右」解作侍從／手下。" },
+          { tag: "時間詞", word: "半晌", example: "半晌而起", chunks: ["半天"], traps: ["半夜"], roles: ["名詞"], meaning: "「半晌」解作半天。" },
+          { tag: "詞義", word: "佯", reading: "羊", example: "佯驚問", chunks: ["假裝"], traps: ["真正"], roles: ["動詞"], meaning: "「佯」音羊，解作假裝。" },
+          { tag: "範圍副詞", word: "皆", example: "人皆以為操果夢中殺人", chunks: ["都"], traps: ["已經"], roles: ["副詞"], meaning: "「皆」解作都。" },
+          { tag: "一詞多義", word: "愈", example: "操聞而愈惡之", chunks: ["越來越"], traps: ["痊癒"], roles: ["副詞"], meaning: "「愈」解作越來越。" },
+          { tag: "詞義", word: "愛", example: "愛修之才", chunks: ["愛慕"], traps: ["可惜"], roles: ["動詞"], meaning: "「愛」解作愛慕。" },
+          { tag: "一詞多義", word: "逕", example: "逕來告操", chunks: ["直接"], traps: ["小路"], roles: ["副詞"], meaning: "「逕」解作直接。" },
+          { tag: "使動", word: "惑", example: "再入以惑之", chunks: ["迷惑"], traps: ["或者"], roles: ["動詞"], meaning: "「惑」解作迷惑，這裡有使對方迷惑之意。" },
+          { tag: "一詞多義", word: "至", example: "曹丕先至", chunks: ["來到"], traps: ["至於"], roles: ["動詞"], meaning: "「至」解作來到。" },
+          { tag: "通假字", word: "阻當", example: "如有阻當者", chunks: ["阻擋"], traps: ["應當"], roles: ["動詞"], meaning: "「阻當」的「當」通「擋」，解作阻擋。" },
+          { tag: "一詞多義", word: "伺", example: "操令人於丕府門伺察之", chunks: ["守候"], traps: ["飼養"], roles: ["動詞"], meaning: "「伺」解作守候。" },
+          { tag: "難字", word: "譖", reading: "浸", example: "操因疑修譖害曹丕", chunks: ["誣陷、中傷"], traps: ["稱讚"], roles: ["動詞"], meaning: "「譖」音浸，解作誣陷、中傷。" }
         ]
       }
     };
@@ -667,6 +765,10 @@
     let mistakeCount = 0;
     let score = 0;
     let completedVerses = [];
+    let mistakes = [];
+    let reviewMode = false;
+    let reviewQueue = [];
+    let reviewPos = 0;
 
     let flagDistanceX = 0;
     let correctLane = 0;
@@ -758,19 +860,81 @@
     }
 
     function applyTheme() {
-      const theme = POEMS[currentKey].theme;
+      document.getElementById('sky-layer').className = 'absolute inset-0';
+      applyStoryMood();
+      applyChapterHUD();
+    }
+
+    function applyStoryMood() {
       const sky = document.getElementById('sky-layer');
+      const fx = document.getElementById('story-fx');
       const wave = document.getElementById('wave-layer');
       const sun = document.getElementById('sun-orb');
-      if (theme === 'farewell') {
-        sky.className = 'absolute inset-0 bg-gradient-to-b from-[#0c1222] via-[#1a2338] to-[#2a1f18]';
-        wave.classList.remove('hidden');
-        if (sun) sun.setAttribute('opacity', '0.55');
+      const chip = document.getElementById('scene-chip');
+      wave.classList.add('hidden');
+      fx.className = 'story-fx absolute inset-0 pointer-events-none';
+      let bg = '';
+      let chipText = '';
+      let sunFill = '#f59e0b';
+      let sunOp = '0.25';
+      if (currentKey === 'yangxiu') {
+        bg = 'linear-gradient(to bottom, #071510 0%, #143028 55%, #4a341c 100%)';
+        chipText = '魏帳 · 伴君如伴虎';
+        sunFill = '#d6b48a';
+        sunOp = '0.28';
+      } else if (lineIdx < 4) {
+        bg = 'linear-gradient(to bottom, #4a2c12 0%, #a16207 48%, #f6c36b 100%)';
+        chipText = '閨房籌備';
+        sunFill = '#fbbf24';
+        sunOp = '0.55';
+      } else if (lineIdx < 8) {
+        bg = 'linear-gradient(to bottom, #020617 0%, #0b1d4a 52%, #1e3a8a 100%)';
+        chipText = '夜問心跡';
+        fx.classList.add('stars');
+        sunFill = '#e2e8f0';
+        sunOp = '0.9';
+      } else if (lineIdx < 12) {
+        bg = 'linear-gradient(to bottom, #1a0508 0%, #7f1d1d 50%, #451a12 100%)';
+        chipText = '軍帖烽火';
+        fx.classList.add('embers');
+        sunFill = '#fb7185';
+        sunOp = '0.45';
       } else {
-        sky.className = 'absolute inset-0 bg-gradient-to-b from-[#0a1018] via-[#152028] to-[#1a1510]';
-        wave.classList.add('hidden');
-        if (sun) sun.setAttribute('opacity', '0.2');
+        bg = 'linear-gradient(to bottom, #7f1d1d 0%, #e11d48 46%, #fbbf24 100%)';
+        chipText = '替父出征';
+        fx.classList.add('petals');
+        sunFill = '#fde68a';
+        sunOp = '0.75';
       }
+      sky.style.background = bg;
+      chip.textContent = chipText;
+      chip.classList.remove('hidden');
+      if (sun) {
+        sun.setAttribute('fill', sunFill);
+        sun.setAttribute('opacity', sunOp);
+      }
+    }
+
+    function applyChapterHUD() {
+      const label = document.getElementById('hp-label');
+      const mood = document.getElementById('hp-mood');
+      if (currentKey === 'yangxiu') {
+        label.textContent = '忌憚';
+        label.classList.add('text-rose-300');
+        label.classList.remove('text-slate-400');
+        mood.classList.remove('hidden');
+      } else {
+        label.textContent = '心力';
+        label.classList.remove('text-rose-300');
+        label.classList.add('text-slate-400');
+        mood.classList.add('hidden');
+      }
+    }
+
+    function defeatMessage() {
+      return currentKey === 'yangxiu'
+        ? '忌憚已極，伴君如伴虎。整頓後再揣摩聖意！'
+        : '心力竭盡，整頓戰馬重來！';
     }
 
     function switchPoem(key) {
@@ -797,6 +961,10 @@
       lineIdx = 0; chunkIdx = 0; currentLane = 0;
       hp = 100; combo = 0; maxCombo = 0; mistakeCount = 0; score = 0;
       completedVerses = [];
+      mistakes = [];
+      reviewMode = false;
+      reviewQueue = [];
+      reviewPos = 0;
       collisionHandled = false; isSpawning = false;
       ghostTrails = [];
       forceWalkGear();
@@ -836,6 +1004,7 @@
       const el = document.getElementById('horse-visual');
       if (!el) return;
       el.classList.toggle('horse-hot', combo >= 3);
+      document.getElementById('game-stage').classList.toggle('rhetoric-streak', currentKey === 'mulan' && combo >= 3);
     }
 
     function calcHitScore() {
@@ -961,11 +1130,20 @@
 
     function spawnNextWave() {
       const poem = POEMS[currentKey];
-      if (lineIdx >= poem.lines.length) {
+      if (reviewMode) {
+        if (reviewPos >= reviewQueue.length) {
+          reviewMode = false;
+          showVictory();
+          return;
+        }
+        lineIdx = reviewQueue[reviewPos].lineIdx;
+        chunkIdx = reviewQueue[reviewPos].chunkIdx;
+      } else if (lineIdx >= poem.lines.length) {
         showVictory();
         return;
       }
 
+      applyStoryMood();
       resetFlagVisuals();
       const activeLine = poem.lines[lineIdx];
       updateSentencePreview(activeLine);
@@ -1004,10 +1182,24 @@
       document.getElementById('flag-bottom').style.opacity = '1';
     }
 
+    function showRhetoricTag(activeLine) {
+      const el = document.getElementById('rhetoric-tag');
+      if (!activeLine || !activeLine.tag) {
+        el.classList.add('hidden');
+        return;
+      }
+      el.textContent = `【${activeLine.tag}】`;
+      el.classList.remove('hidden');
+      el.classList.toggle('rhetoric-pill-court', currentKey === 'yangxiu');
+    }
+
     function updateSentencePreview(activeLine) {
       const poem = POEMS[currentKey];
-      document.getElementById('line-progress').textContent =
-        `第 ${lineIdx + 1} / ${poem.lines.length} ${poemUnit(poem)}`;
+      const progress = reviewMode
+        ? `專攻 ${reviewPos + 1} / ${reviewQueue.length}`
+        : `第 ${lineIdx + 1} / ${poem.lines.length} ${poemUnit(poem)}`;
+      document.getElementById('line-progress').textContent = progress;
+      showRhetoricTag(activeLine);
 
       if (activeLine.word) {
         const reading = activeLine.reading ? ` · 音：${activeLine.reading}` : '';
@@ -1116,16 +1308,21 @@
         triggerFloatingFeedback(`${praise}！+${gained} (×${mult})`, '#38bdf8');
 
         const finishingLine = POEMS[currentKey].lines[lineIdx];
-        chunkIdx++;
-        if (chunkIdx >= finishingLine.chunks.length) {
-          appendCompletedVerse(finishingLine);
-          chunkIdx = 0;
-          lineIdx++;
+        if (reviewMode) {
+          reviewPos++;
+        } else {
+          chunkIdx++;
+          if (chunkIdx >= finishingLine.chunks.length) {
+            appendCompletedVerse(finishingLine);
+            chunkIdx = 0;
+            lineIdx++;
+          }
         }
       } else {
         audio.playHurt();
         spawnShatterParticles(hx, hy, 'wrong');
         animateFlagTear(false);
+        recordMistake();
         mistakeCount++;
         combo = 0;
         hp -= 20;
@@ -1136,7 +1333,7 @@
 
         if (hp <= 0) {
           if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
-          alert('心力竭盡，整頓戰馬重來！');
+          alert(defeatMessage());
           forceWalkGear();
           resetGame();
           return;
@@ -1152,6 +1349,7 @@
       collisionHandled = true;
       isSpawning = false;
       audio.playHurt();
+      recordMistake();
       mistakeCount++;
       combo = 0;
       hp -= 15;
@@ -1162,13 +1360,73 @@
 
       if (hp <= 0) {
         if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
-        alert('心力竭盡，整頓戰馬重來！');
+        alert(defeatMessage());
         forceWalkGear();
         resetGame();
         return;
       }
       updateHUD();
       spawnTimer = setTimeout(spawnNextWave, 320);
+    }
+
+    function recordMistake() {
+      const line = POEMS[currentKey].lines[lineIdx];
+      if (!line) return;
+      const id = `${currentKey}:${lineIdx}:${chunkIdx}`;
+      if (mistakes.some((item) => item.id === id)) return;
+      const correct = line.chunks[chunkIdx];
+      mistakes.push({
+        id,
+        prompt: line.word ? `「${line.word}」${line.example}` : line.chunks.join(''),
+        correct,
+        tag: line.tag || ''
+      });
+    }
+
+    function renderMistakeReport() {
+      const panel = document.getElementById('mistake-panel');
+      const badge = document.getElementById('perfect-badge');
+      const retry = document.getElementById('retry-mistakes');
+      const list = document.getElementById('mistake-scroll');
+      if (!mistakes.length) {
+        panel.classList.add('hidden');
+        retry.classList.add('hidden');
+        badge.classList.remove('hidden');
+        list.innerHTML = '';
+        return;
+      }
+      badge.classList.add('hidden');
+      panel.classList.remove('hidden');
+      retry.classList.remove('hidden');
+      list.innerHTML = mistakes.map((item) => `
+        <div class="border-b border-slate-800/80 pb-1.5 last:border-0">
+          <div class="text-slate-300">${item.tag ? `<span class="text-amber-300">【${item.tag}】</span> ` : ''}${item.prompt}</div>
+          <div>正解：<span class="text-emerald-300 font-black">${item.correct}</span></div>
+        </div>`).join('');
+    }
+
+    function startMistakeReview() {
+      if (!mistakes.length) return;
+      reviewQueue = mistakes.map((item) => {
+        const parts = item.id.split(':');
+        return { lineIdx: Number(parts[1]), chunkIdx: Number(parts[2]) };
+      });
+      mistakes = [];
+      reviewPos = 0;
+      reviewMode = true;
+      hp = 100;
+      combo = 0;
+      collisionHandled = false;
+      isSpawning = false;
+      if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
+      document.getElementById('report-modal').classList.add('hidden');
+      if (isPaused) togglePause(true);
+      updateHUD();
+      updateHorseGlow();
+      loopToken += 1;
+      const token = loopToken;
+      spawnNextWave();
+      gameLoop(token);
     }
 
     function triggerFloatingFeedback(msg, color) {
@@ -1205,6 +1463,7 @@
       const acc = Math.max(10, Math.round((total / (total + mistakeCount)) * 100));
       const accLabel = isVocabPoem(POEMS[currentKey]) ? '詞義避障成功' : '錯別字避障成功';
       document.getElementById('stat-accuracy').textContent = `${acc}% (${accLabel})`;
+      renderMistakeReport();
       document.getElementById('report-modal').classList.remove('hidden');
     }
 
@@ -1219,6 +1478,7 @@
     window.restartGame = restartGame;
     window.togglePause = togglePause;
     window.setGear = setGear;
+    window.startMistakeReview = startMistakeReview;
 
     document.querySelectorAll('#gear-bar button').forEach((btn) => {
       btn.addEventListener('click', (e) => {
