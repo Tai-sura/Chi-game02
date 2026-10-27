@@ -143,13 +143,12 @@
       position: relative;
       z-index: 1;
       display: block;
-      font-size: var(--horse-w);
-      line-height: 1;
-      transform: scaleX(-1); /* 馬頭朝右迎向戰旗 */
-      -webkit-text-fill-color: initial;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      /* 內嵌向量圖，不使用系統繪文字，也不加 filter / transform，避免各裝置畫成不同的馬 */
       filter: none !important;
-      text-shadow: none !important;
-      user-select: none;
+      transform: none;
     }
 
     .ink-mask {
@@ -303,7 +302,30 @@
       <div id="horse-player" style="top: 25%;">
         <!-- 奔馳動畫只在外層；馬圖本身不做 CSS filter，避免手機碎圖 -->
         <div id="horse-visual" class="horse-bob horse-gallop" aria-label="戰馬衝刺">
-          <span class="horse-emoji" role="img" aria-hidden="true">🐎</span>
+          <svg class="horse-emoji" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+            <path d="M30 44 C16 40 8 54 14 72 C20 62 26 58 32 58 C28 52 28 46 30 44 Z" fill="#3A2918"/>
+            <path d="M28 52 C18 50 12 60 16 70 C22 64 26 60 32 60 Z" fill="#5A3B24"/>
+            <path d="M36 60 L30 84 L40 84 L44 62 Z" fill="#8A5A32"/>
+            <path d="M48 62 L46 86 L56 86 L56 64 Z" fill="#A56B3C"/>
+            <path d="M28 82 H42 V88 H28 Z" fill="#24180F"/>
+            <path d="M44 84 H58 V90 H44 Z" fill="#24180F"/>
+            <path d="M36 58 C36 42 52 34 74 34 C96 34 112 42 118 52 C122 60 114 68 100 70 C78 74 54 70 42 64 C36 60 34 60 36 58 Z" fill="#C68642"/>
+            <path d="M46 62 C62 70 90 70 110 58 C98 66 70 70 48 64 Z" fill="#A56B3C"/>
+            <path d="M108 50 C116 36 122 28 130 24 C134 34 130 46 120 52 C114 56 108 54 108 50 Z" fill="#C68642"/>
+            <path d="M126 26 C132 16 148 16 156 26 C158 34 152 42 142 42 C132 42 124 34 126 26 Z" fill="#D4924A"/>
+            <path d="M146 30 C152 32 154 38 150 42 C144 38 142 32 146 30 Z" fill="#F6D7AE"/>
+            <path d="M132 20 L128 8 L138 18 Z" fill="#A56B3C"/>
+            <path d="M140 16 L144 6 L150 18 Z" fill="#8A5A32"/>
+            <path d="M124 24 C112 10 96 16 94 28 C104 22 114 26 122 34 Z" fill="#3A2918"/>
+            <path d="M118 30 C106 16 90 22 88 32 C100 26 110 30 118 38 Z" fill="#24180F"/>
+            <ellipse cx="146" cy="28" rx="2.3" ry="2.8" fill="#1C120C"/>
+            <circle cx="146.8" cy="27.1" r="0.75" fill="#FFFFFF"/>
+            <ellipse cx="154" cy="36" rx="1.4" ry="1" fill="#6B3F24"/>
+            <path d="M98 66 L94 88 L108 88 L110 66 Z" fill="#8A5A32"/>
+            <path d="M114 60 L130 78 L136 74 L120 56 Z" fill="#A56B3C"/>
+            <path d="M92 86 H110 V92 H92 Z" fill="#24180F"/>
+            <path d="M128 74 H140 V78 H128 Z" fill="#24180F"/>
+          </svg>
         </div>
       </div>
 
