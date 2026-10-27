@@ -196,7 +196,7 @@
   <header class="w-full max-w-4xl px-3 sm:px-4 py-2 flex flex-wrap justify-between items-center gap-2 z-20 bg-slate-900/90 border-b border-slate-800 sticky top-0 backdrop-blur">
     <div class="flex items-center space-x-2 min-w-0">
       <span class="bg-amber-500 text-slate-950 font-black text-xs px-2 py-0.5 rounded shadow shrink-0">Uni+ 跑酷獵場</span>
-      <span id="poem-title" class="text-xs md:text-sm font-bold text-amber-400 truncate">木蘭詩 · 馳騁出征</span>
+      <span id="poem-title" class="text-xs md:text-sm font-bold text-amber-400 truncate">木蘭詩</span>
     </div>
 
     <div class="flex items-center flex-wrap justify-end gap-2 md:gap-3 shrink-0">
@@ -225,8 +225,8 @@
       <button onclick="switchPoem('mulan')" id="tab-mulan" class="px-3 py-1 text-xs font-black rounded-t-lg bg-amber-500 text-slate-950 transition-all">
         🐎 木蘭詩（雙軌出征）
       </button>
-      <button onclick="switchPoem('song')" id="tab-song" class="px-3 py-1 text-xs font-black rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition-all">
-        🗡️ 送友人（萬里長征）
+      <button onclick="switchPoem('yangxiu')" id="tab-yangxiu" class="px-3 py-1 text-xs font-black rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition-all">
+        🗡️ 楊修之死（文言字詞）
       </button>
     </div>
     <div class="flex items-center gap-1.5 pb-0.5 relative z-40" title="鍵盤 [ 減速 · ] 加速">
@@ -244,10 +244,9 @@
     <div class="bg-slate-900 border-t-2 border-x-2 border-slate-800 rounded-t-2xl py-2 px-4 flex flex-col gap-1.5">
       <div class="flex justify-between items-center text-xs gap-2">
         <span id="line-progress" class="text-amber-500 font-extrabold shrink-0">第 1 / 16 聯</span>
-        <span id="speed-hint" class="text-slate-500 text-[11px] truncate">時速 2.8 · 漫步 ×1.0</span>
         <span class="text-slate-500 text-[11px] hidden md:inline shrink-0">W/S · Space · [ ]</span>
       </div>
-      <div id="sentence-preview" class="font-black text-sm md:text-base flex flex-wrap items-end justify-center gap-x-1 gap-y-1 min-h-[2.5rem]"></div>
+      <div id="sentence-preview" class="font-black text-2xl md:text-3xl flex flex-wrap items-center justify-center gap-x-1 gap-y-1 min-h-[3rem]"></div>
     </div>
 
     <!-- 跑酷舞台 -->
@@ -322,7 +321,7 @@
           <div class="bg-slate-900 border border-slate-700 rounded-xl p-3 text-left space-y-2 mb-3">
             <div id="pause-line-title" class="text-xs font-bold text-amber-400"></div>
             <div id="pause-chunks" class="text-base font-black text-white tracking-wide"></div>
-            <div id="pause-meaning" class="text-xs text-slate-300 leading-relaxed border-t border-slate-700 pt-2"></div>
+            <div id="pause-meaning" class="text-sm text-slate-200 leading-relaxed border-t border-slate-700 pt-2"></div>
             <div id="pause-scroll-preview" class="text-[11px] text-slate-400 leading-relaxed border-t border-slate-700 pt-2 max-h-24 overflow-y-auto scroll-ink"></div>
           </div>
           <button onclick="togglePause()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black rounded-xl text-sm active:scale-95">
@@ -334,8 +333,7 @@
 
     <!-- 破陣詩卷 -->
     <div id="verses-drawer" class="mt-2 rounded-xl border border-amber-700/40 bg-gradient-to-b from-[#1a1510]/95 to-slate-950/95 shadow-inner overflow-hidden">
-      <div class="flex items-center justify-between px-3 py-1.5 border-b border-amber-800/30">
-        <span class="text-[11px] md:text-xs font-black text-amber-300 tracking-wide">📜 破陣詩卷（已解鎖詩境）</span>
+      <div class="flex items-center justify-end px-3 py-1.5 border-b border-amber-800/30">
         <span id="verses-count" class="text-[10px] text-slate-500 font-bold">0 / 16 聯</span>
       </div>
       <div id="verses-list" class="scroll-ink px-3 py-2 h-[84px] md:h-[96px] overflow-y-auto space-y-1.5 text-sm">
@@ -353,10 +351,7 @@
   <div id="report-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-[60] hidden">
     <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl max-w-md w-full p-6 text-slate-100 shadow-[0_0_50px_rgba(245,158,11,0.25)]">
       <div class="text-center">
-        <div class="text-4xl mb-2">🏆</div>
-        <span class="text-xs font-black bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full uppercase">闖關圓滿 · 默書通關</span>
-        <h2 class="text-xl font-black mt-2 text-white">千里奔襲 · 詩魂烙印</h2>
-        <p class="text-xs text-slate-400 mt-1">Uni+ 動態雙軌認知負荷成果診斷</p>
+        <div class="text-4xl">🏆</div>
       </div>
       <div class="my-5 bg-slate-950/80 border border-slate-800 rounded-xl p-4 space-y-3 text-xs">
         <div class="flex justify-between items-center">
@@ -371,9 +366,6 @@
           <span class="text-slate-400">最高馳騁連擊:</span>
           <span id="stat-combo" class="text-emerald-400 font-extrabold text-sm">0 連斬</span>
         </div>
-        <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 leading-relaxed">
-          💡 <strong>專家點評</strong>：學生在自選配速與篇章卷軸回顧中，兼顧反應提取與全篇組塊記憶，語文素養閉環更完整。
-        </div>
       </div>
       <button onclick="restartGame()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black rounded-xl text-sm shadow-lg active:scale-95">
         馳騁下一篇章
@@ -384,41 +376,69 @@
   <script>
     const POEMS = {
       mulan: {
-        title: "木蘭詩 · 馳騁出征",
+        title: "木蘭詩",
         heroName: "木蘭",
         theme: "camp",
         lines: [
-          { chunks: ["唧唧", "復唧唧"], traps: ["默默", "又唧唧"], roles: ["擬聲詞", "反復疊詞"], meaning: "織布機聲唧唧不斷，暗示夜深未歇、心事難平。" },
-          { chunks: ["木蘭", "當戶", "織"], traps: ["秀英", "在戶", "職"], roles: ["人名", "方位動詞", "動作"], meaning: "木蘭正對著門織布，日常場景中潛藏兵役衝突。" },
-          { chunks: ["不聞", "機杼聲"], traps: ["難聞", "機抒聲"], roles: ["否定感知", "器物聲"], meaning: "聽不見機杼聲了——織作停歇，異常由此浮現。" },
-          { chunks: ["唯聞", "女歎息"], traps: ["但見", "女長歎"], roles: ["唯一感知", "情感詞"], meaning: "只聽見女兒歎息，情緒成為敘事焦點。" },
-          { chunks: ["問女", "何所", "思"], traps: ["問兒", "為誰", "愁"], roles: ["設問", "疑問結構", "心理動詞"], meaning: "問她在想什麼？引導讀者進入內心獨白。" },
-          { chunks: ["問女", "何所", "憶"], traps: ["問妹", "為誰", "慮"], roles: ["設問", "疑問結構", "回憶動詞"], meaning: "問她在憶什麼？思／憶對仗，強化回憶張力。" },
-          { chunks: ["女亦", "無所", "思"], traps: ["兒身", "毫無", "想"], roles: ["主語", "否定結構", "心理"], meaning: "她說並無所思——暫時壓抑，為下文軍帖鋪墊。" },
-          { chunks: ["女亦", "無所", "憶"], traps: ["兒心", "毫無", "意"], roles: ["主語", "否定結構", "回憶"], meaning: "亦無所憶，與上句對偶，語氣卻欲蓋彌彰。" },
-          { chunks: ["昨夜", "見軍帖"], traps: ["前朝", "看軍書"], roles: ["時間詞", "事件動詞"], meaning: "昨夜看見徵兵軍帖，個人命運被國家召喚打斷。" },
-          { chunks: ["可汗", "大", "點兵"], traps: ["皇帝", "廣", "選兵"], roles: ["君主稱謂", "程度副詞", "軍事動詞"], meaning: "可汗大規模點兵，危機升級至全家。" },
-          { chunks: ["軍書", "十二卷"], traps: ["文書", "萬千卷"], roles: ["公文名詞", "數量詞"], meaning: "軍書十二卷，徵兵名單浩繁如山。" },
-          { chunks: ["卷卷", "有爺名"], traps: ["頁頁", "有父名"], roles: ["疊詞", "親屬詞"], meaning: "卷卷都有父親的名字——無可迴避的義務。" },
-          { chunks: ["阿爺", "無大兒"], traps: ["老父", "少長兒"], roles: ["親屬", "否定狀態"], meaning: "父親沒有成年兒子可應征。" },
-          { chunks: ["木蘭", "無長兄"], traps: ["家中", "缺大兄"], roles: ["人名", "家庭結構"], meaning: "木蘭也沒有長兄，責任落在自己身上。" },
-          { chunks: ["願為", "市", "鞍馬"], traps: ["願去", "買", "戰馬"], roles: ["意願", "動詞", "器物"], meaning: "願意去買鞍馬——由歎息轉向行動決意。" },
-          { chunks: ["從此", "替爺", "征"], traps: ["如今", "代父", "行"], roles: ["時間轉折", "替代關係", "征戰動詞"], meaning: "從此替父出征，巾幗騎兵的故事正式起程。" }
+          { chunks: ["唧唧", "復唧唧"], traps: ["默默", "又唧唧"], roles: ["擬聲詞", "反復疊詞"], meaning: "織布機唧唧地響了又響。" },
+          { chunks: ["木蘭", "當戶", "織"], traps: ["秀英", "在戶", "職"], roles: ["人名", "方位動詞", "動作"], meaning: "木蘭對著門在織布。" },
+          { chunks: ["不聞", "機杼聲"], traps: ["難聞", "機抒聲"], roles: ["否定感知", "器物聲"], meaning: "聽不見織布機的聲音了。" },
+          { chunks: ["唯聞", "女歎息"], traps: ["但見", "女長歎"], roles: ["唯一感知", "情感詞"], meaning: "只聽見女兒在歎氣。" },
+          { chunks: ["問女", "何所", "思"], traps: ["問兒", "為誰", "愁"], roles: ["設問", "疑問結構", "心理動詞"], meaning: "問女兒在想什麼。" },
+          { chunks: ["問女", "何所", "憶"], traps: ["問妹", "為誰", "慮"], roles: ["設問", "疑問結構", "回憶動詞"], meaning: "問女兒在思念什麼。" },
+          { chunks: ["女亦", "無所", "思"], traps: ["兒身", "毫無", "想"], roles: ["主語", "否定結構", "心理"], meaning: "女兒也沒有在想什麼。" },
+          { chunks: ["女亦", "無所", "憶"], traps: ["兒心", "毫無", "意"], roles: ["主語", "否定結構", "回憶"], meaning: "女兒也沒有在思念什麼。" },
+          { chunks: ["昨夜", "見軍帖"], traps: ["前朝", "看軍書"], roles: ["時間詞", "事件動詞"], meaning: "昨夜看見了徵兵的文書。" },
+          { chunks: ["可汗", "大", "點兵"], traps: ["皇帝", "廣", "選兵"], roles: ["君主稱謂", "程度副詞", "軍事動詞"], meaning: "可汗大規模地徵兵。" },
+          { chunks: ["軍書", "十二卷"], traps: ["文書", "萬千卷"], roles: ["公文名詞", "數量詞"], meaning: "徵兵名冊有很多卷。" },
+          { chunks: ["卷卷", "有爺名"], traps: ["頁頁", "有父名"], roles: ["疊詞", "親屬詞"], meaning: "每一卷都有父親的名字。" },
+          { chunks: ["阿爺", "無大兒"], traps: ["老父", "少長兒"], roles: ["親屬", "否定狀態"], meaning: "父親沒有成年的兒子。" },
+          { chunks: ["木蘭", "無長兄"], traps: ["家中", "缺大兄"], roles: ["人名", "家庭結構"], meaning: "木蘭沒有哥哥。" },
+          { chunks: ["願為", "市", "鞍馬"], traps: ["願去", "買", "戰馬"], roles: ["意願", "動詞", "器物"], meaning: "願意去買馬鞍和馬匹。" },
+          { chunks: ["從此", "替爺", "征"], traps: ["如今", "代父", "行"], roles: ["時間轉折", "替代關係", "征戰動詞"], meaning: "從此代替父親出征。" }
         ]
       },
-      song: {
-        title: "送友人 · 萬里長征",
-        heroName: "李白",
+      yangxiu: {
+        title: "楊修之死 · 文言字詞",
+        heroName: "楊修",
         theme: "farewell",
+        quiz: "vocab",
         lines: [
-          { chunks: ["青山", "橫", "北郭"], traps: ["青峰", "恆", "北廓"], roles: ["景物名詞", "動詞", "地名"], meaning: "青翠山巒橫亙城北——開篇以壯闊景物定調。" },
-          { chunks: ["白水", "繞", "東城"], traps: ["碧水", "擾", "東池"], roles: ["景物名詞", "動詞", "地名"], meaning: "清澈河水環繞東城，與青山對仗成畫。" },
-          { chunks: ["此地", "一", "為別"], traps: ["何處", "已", "作別"], roles: ["指示詞", "數詞", "離別動詞"], meaning: "就在此地一別——空間定格離情。" },
-          { chunks: ["孤蓬", "萬里", "征"], traps: ["孤舟", "千里", "整"], roles: ["意象名詞", "距離詞", "遠行"], meaning: "如孤蓬萬里遠征，友人前路飄搖不定。" },
-          { chunks: ["浮雲", "遊子意"], traps: ["殘雲", "故人意"], roles: ["自然意象", "情感喻"], meaning: "浮雲恰似遊子心意——無根而漂泊。" },
-          { chunks: ["落日", "故人情"], traps: ["夕陽", "行客情"], roles: ["時間意象", "情感詞"], meaning: "落日映襯故人情深，溫暖卻將別離。" },
-          { chunks: ["揮手", "自茲", "去"], traps: ["拍手", "從茲", "別"], roles: ["動作", "時間詞", "離去"], meaning: "揮手從此離去，動作簡潔而斷然。" },
-          { chunks: ["蕭蕭", "班馬", "鳴"], traps: ["肅肅", "斑馬", "嘶"], roles: ["擬聲詞", "馬匹意象", "聲音動詞"], meaning: "馬匹蕭蕭長鳴，以聲寫情，餘韻無窮。" }
+          { word: "欲", example: "欲要進兵", chunks: ["打算"], traps: ["將要"], roles: ["動詞"], meaning: "「欲」解作打算。" },
+          { word: "恐", example: "又恐被蜀兵恥笑", chunks: ["怕"], traps: ["恐嚇"], roles: ["動詞"], meaning: "「恐」解作怕。" },
+          { word: "適", example: "適庖官進雞湯", chunks: ["適逢"], traps: ["舒適"], roles: ["副詞"], meaning: "「適」解作適逢。" },
+          { word: "教", example: "便教隨行軍士", chunks: ["讓、令"], traps: ["教導"], roles: ["動詞"], meaning: "「教」解作讓、令。" },
+          { word: "遂", example: "遂請楊修至帳中", chunks: ["於是"], traps: ["竟然"], roles: ["副詞"], meaning: "「遂」解作於是。" },
+          { word: "何", example: "公何收拾行裝？", chunks: ["為甚麼"], traps: ["哪裡"], roles: ["疑問代詞"], meaning: "「何」解作為甚麼。" },
+          { word: "不日", example: "便知魏王不日將退兵歸也", chunks: ["未來數天"], traps: ["當天"], roles: ["名詞"], meaning: "「不日」解作未來數天。" },
+          { word: "益", example: "在此無益", chunks: ["益處、好處"], traps: ["更加"], roles: ["名詞"], meaning: "「益」解作益處、好處。" },
+          { word: "班師", example: "來日魏王必班師矣", chunks: ["調回軍隊"], traps: ["出征"], roles: ["動詞"], meaning: "「班師」解作調回軍隊。" },
+          { word: "肺腑", example: "公真知魏王肺腑也", chunks: ["內心"], traps: ["五臟"], roles: ["名詞"], meaning: "「肺腑」解作內心。" },
+          { word: "遂", example: "遂亦收拾行裝", chunks: ["於是"], traps: ["終於"], roles: ["副詞"], meaning: "「遂」解作於是。" },
+          { word: "故", example: "急回帳召惇問其故", chunks: ["緣故、原因"], traps: ["所以"], roles: ["名詞"], meaning: "「故」解作緣故、原因。" },
+          { word: "汝", example: "汝怎敢造言亂我軍心？", chunks: ["你"], traps: ["他"], roles: ["人稱代詞"], meaning: "「汝」解作你。" },
+          { word: "對", example: "修以雞肋之意對", chunks: ["回答"], traps: ["正確"], roles: ["動詞"], meaning: "「對」解作回答。" },
+          { word: "數", reading: "朔", example: "數犯曹操之忌", chunks: ["多次、屢次"], traps: ["數目"], roles: ["副詞"], meaning: "「數」音朔，解作多次、屢次。" },
+          { word: "嘗", example: "操嘗造花園一所", chunks: ["曾經"], traps: ["嘗試"], roles: ["副詞"], meaning: "「嘗」解作曾經。" },
+          { word: "曉", example: "人皆不曉其意", chunks: ["明白、知曉"], traps: ["早晨"], roles: ["動詞"], meaning: "「曉」解作明白、知曉。" },
+          { word: "停當", example: "改造停當", chunks: ["妥當"], traps: ["停止"], roles: ["動詞"], meaning: "「停當」解作妥當。" },
+          { word: "吾", example: "誰知吾意？", chunks: ["我"], traps: ["你"], roles: ["人稱代詞"], meaning: "「吾」解作我。" },
+          { word: "置", example: "置之案頭", chunks: ["放置、放在"], traps: ["設立"], roles: ["動詞"], meaning: "「置」解作放置、放在。" },
+          { word: "訖", reading: "屹", example: "竟取匙與眾分食訖", chunks: ["完畢"], traps: ["乞求"], roles: ["動詞"], meaning: "「訖」音屹，解作完畢。" },
+          { word: "豈", example: "豈敢違丞相之命乎？", chunks: ["怎"], traps: ["竟然"], roles: ["副詞"], meaning: "「豈」解作怎。" },
+          { word: "惡", example: "心惡之", chunks: ["討厭、厭惡"], traps: ["凶惡"], roles: ["動詞"], meaning: "「惡」解作討厭、厭惡。" },
+          { word: "左右", example: "常吩咐左右", chunks: ["侍從／手下"], traps: ["兩旁"], roles: ["名詞"], meaning: "「左右」解作侍從／手下。" },
+          { word: "半晌", example: "半晌而起", chunks: ["半天"], traps: ["半夜"], roles: ["名詞"], meaning: "「半晌」解作半天。" },
+          { word: "佯", reading: "羊", example: "佯驚問", chunks: ["假裝"], traps: ["真正"], roles: ["動詞"], meaning: "「佯」音羊，解作假裝。" },
+          { word: "皆", example: "人皆以為操果夢中殺人", chunks: ["都"], traps: ["已經"], roles: ["副詞"], meaning: "「皆」解作都。" },
+          { word: "愈", example: "操聞而愈惡之", chunks: ["越來越"], traps: ["痊癒"], roles: ["副詞"], meaning: "「愈」解作越來越。" },
+          { word: "愛", example: "愛修之才", chunks: ["愛慕"], traps: ["可惜"], roles: ["動詞"], meaning: "「愛」解作愛慕。" },
+          { word: "逕", example: "逕來告操", chunks: ["直接"], traps: ["小路"], roles: ["副詞"], meaning: "「逕」解作直接。" },
+          { word: "惑", example: "再入以惑之", chunks: ["迷惑"], traps: ["或者"], roles: ["動詞"], meaning: "「惑」解作迷惑。" },
+          { word: "至", example: "曹丕先至", chunks: ["來到"], traps: ["至於"], roles: ["動詞"], meaning: "「至」解作來到。" },
+          { word: "阻當", example: "如有阻當者", chunks: ["阻擋"], traps: ["應當"], roles: ["動詞"], meaning: "「阻當」解作阻擋。" },
+          { word: "伺", example: "操令人於丕府門伺察之", chunks: ["守候"], traps: ["飼養"], roles: ["動詞"], meaning: "「伺」解作守候。" },
+          { word: "譖", reading: "浸", example: "操因疑修譖害曹丕", chunks: ["誣陷、中傷"], traps: ["稱讚"], roles: ["動詞"], meaning: "「譖」音浸，解作誣陷、中傷。" }
         ]
       }
     };
@@ -617,6 +637,29 @@
       return Array.from({ length: len }, () => '_').join(' ');
     }
 
+    function isVocabPoem(poem) {
+      return !!(poem && poem.quiz === 'vocab');
+    }
+
+    function poemUnit(poem) {
+      return isVocabPoem(poem) ? '詞' : '聯';
+    }
+
+    function highlightWord(example, word) {
+      const at = example.indexOf(word);
+      if (at < 0) return example;
+      return `${example.slice(0, at)}<span class="text-amber-300">${word}</span>${example.slice(at + word.length)}`;
+    }
+
+    function setFlagText(id, text) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      const long = text.length > 4;
+      el.classList.toggle('text-sm', long);
+      el.classList.toggle('md:text-base', long);
+      el.classList.toggle('leading-tight', long);
+    }
+
     function currentGear() {
       return SPEED_GEARS[gearIndex];
     }
@@ -690,7 +733,7 @@
       document.getElementById('tab-mulan').className = key === 'mulan'
         ? 'px-3 py-1 text-xs font-black rounded-t-lg bg-amber-500 text-slate-950 transition-all'
         : 'px-3 py-1 text-xs font-black rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition-all';
-      document.getElementById('tab-song').className = key === 'song'
+      document.getElementById('tab-yangxiu').className = key === 'yangxiu'
         ? 'px-3 py-1 text-xs font-black rounded-t-lg bg-amber-500 text-slate-950 transition-all'
         : 'px-3 py-1 text-xs font-black rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition-all';
       document.getElementById('poem-title').textContent = POEMS[key].title;
@@ -755,18 +798,23 @@
     }
 
     function appendCompletedVerse(line) {
-      const text = line.chunks.join(' / ');
+      const text = line.word ? `${line.word}＝${line.chunks[0]}` : line.chunks.join(' / ');
       completedVerses.push(text);
       renderVersesScroll(true);
     }
 
     function renderVersesScroll(animateLatest) {
       const list = document.getElementById('verses-list');
-      const total = POEMS[currentKey].lines.length;
-      document.getElementById('verses-count').textContent = `${completedVerses.length} / ${total} 聯`;
+      const poem = POEMS[currentKey];
+      const total = poem.lines.length;
+      const unit = poemUnit(poem);
+      document.getElementById('verses-count').textContent = `${completedVerses.length} / ${total} ${unit}`;
 
       if (!completedVerses.length) {
-        list.innerHTML = '<div id="verses-empty" class="text-slate-600 text-xs italic text-center py-5">破障成功的詩句將在此點亮成卷……</div>';
+        const empty = isVocabPoem(poem)
+          ? '破障成功的詞義將在此點亮成卷……'
+          : '破障成功的詩句將在此點亮成卷……';
+        list.innerHTML = `<div id="verses-empty" class="text-slate-600 text-xs italic text-center py-5">${empty}</div>`;
         return;
       }
 
@@ -820,19 +868,25 @@
       const poem = POEMS[currentKey];
       const safeIdx = Math.min(lineIdx, poem.lines.length - 1);
       const line = poem.lines[safeIdx];
+      const unit = poemUnit(poem);
       document.getElementById('pause-line-title').textContent =
-        `${poem.title} · 第 ${safeIdx + 1} 聯`;
-      document.getElementById('pause-chunks').textContent = line.chunks.join('  /  ');
-      const roles = (line.roles || []).map((r, i) => `${line.chunks[i]}（${r}）`).join(' · ');
-      document.getElementById('pause-meaning').innerHTML =
-        `<div class="mb-1 text-amber-200/80">${roles}</div>${line.meaning}`;
+        `${poem.title} · 第 ${safeIdx + 1} ${unit}`;
+      if (line.word) {
+        const reading = line.reading ? ` · 音：${line.reading}` : '';
+        document.getElementById('pause-chunks').textContent = `「${line.word}」＝${line.chunks[0]}`;
+        document.getElementById('pause-meaning').innerHTML =
+          `<div class="mb-1 text-amber-200/80">${line.roles[0]}${reading}</div>例句：${line.example}。${line.meaning}`;
+      } else {
+        document.getElementById('pause-chunks').textContent = line.chunks.join('');
+        document.getElementById('pause-meaning').textContent = line.meaning;
+      }
 
       const done = completedVerses.map((v, i) => `<div class="text-emerald-400/90">${i + 1}. ${v}</div>`).join('');
       const pending = poem.lines.slice(completedVerses.length).map((l, i) =>
-        `<div class="text-slate-600">${completedVerses.length + i + 1}. ${l.chunks.map(() => '··').join(' / ')}</div>`
+        `<div class="text-slate-600">${completedVerses.length + i + 1}. ${l.word ? '··' : l.chunks.map(() => '··').join(' / ')}</div>`
       ).join('');
       document.getElementById('pause-scroll-preview').innerHTML =
-        `<div class="font-bold text-slate-500 mb-1">篇章進度預覽</div>${done || '<div class="text-slate-600">尚無已破聯</div>'}${pending}`;
+        `<div class="font-bold text-slate-500 mb-1">篇章進度預覽</div>${done || `<div class="text-slate-600">尚無已破${unit}</div>`}${pending}`;
     }
 
     window.addEventListener('keydown', (e) => {
@@ -876,11 +930,11 @@
 
       // 雙重保險：上下道文字必須互異，且正確車道標記對應正解
       if (correctLane === 0) {
-        document.getElementById('flag-top-text').textContent = targetText;
-        document.getElementById('flag-bottom-text').textContent = trapText;
+        setFlagText('flag-top-text', targetText);
+        setFlagText('flag-bottom-text', trapText);
       } else {
-        document.getElementById('flag-top-text').textContent = trapText;
-        document.getElementById('flag-bottom-text').textContent = targetText;
+        setFlagText('flag-top-text', trapText);
+        setFlagText('flag-bottom-text', targetText);
       }
 
       if (targetText === trapText) {
@@ -905,30 +959,35 @@
     }
 
     function updateSentencePreview(activeLine) {
+      const poem = POEMS[currentKey];
       document.getElementById('line-progress').textContent =
-        `第 ${lineIdx + 1} / ${POEMS[currentKey].lines.length} 聯`;
+        `第 ${lineIdx + 1} / ${poem.lines.length} ${poemUnit(poem)}`;
+
+      if (activeLine.word) {
+        const reading = activeLine.reading ? ` · 音：${activeLine.reading}` : '';
+        const role = (activeLine.roles && activeLine.roles[0]) || '詞義';
+        document.getElementById('sentence-preview').innerHTML = `
+          <span class="basis-full text-center text-[10px] tracking-widest text-amber-500 font-bold">文言字詞</span>
+          <span class="text-2xl md:text-3xl text-white tracking-wide">${highlightWord(activeLine.example, activeLine.word)}</span>
+          <span class="text-slate-500 mx-1 self-center mb-3">＝</span>
+          <span class="inline-flex flex-col items-center mx-0.5">
+            <span class="text-amber-400 underline decoration-2 animate-pulse font-extrabold tracking-wider">[ 詞義 ]</span>
+            <span class="text-[9px] text-amber-500/90 font-bold bg-amber-500/10 px-1 rounded">${role}${reading}</span>
+          </span>`;
+        return;
+      }
 
       let html = '';
       activeLine.chunks.forEach((chunk, i) => {
-        const role = (activeLine.roles && activeLine.roles[i]) || '語義塊';
         if (i < chunkIdx) {
-          html += `<span class="inline-flex flex-col items-center mx-0.5">
-            <span class="text-emerald-400 font-extrabold">${chunk}</span>
-            <span class="text-[9px] text-emerald-700/80 font-semibold">${role}</span>
-          </span>`;
+          html += `<span class="text-emerald-400 font-extrabold mx-0.5">${chunk}</span>`;
         } else if (i === chunkIdx) {
-          html += `<span class="inline-flex flex-col items-center mx-0.5">
-            <span class="text-amber-400 underline decoration-2 animate-pulse font-extrabold tracking-wider">[ ${blankFor(chunk.length)} ]</span>
-            <span class="text-[9px] text-amber-500/90 font-bold bg-amber-500/10 px-1 rounded">${role}</span>
-          </span>`;
+          html += `<span class="text-amber-400 underline decoration-2 animate-pulse font-extrabold tracking-wider mx-0.5">[ ${blankFor(chunk.length)} ]</span>`;
         } else {
-          html += `<span class="inline-flex flex-col items-center mx-0.5">
-            <span class="text-slate-600">··</span>
-            <span class="text-[9px] text-transparent">·</span>
-          </span>`;
+          html += `<span class="text-slate-600 mx-0.5">··</span>`;
         }
         if (i < activeLine.chunks.length - 1) {
-          html += `<span class="text-slate-600 mx-0.5 self-center mb-3">/</span>`;
+          html += `<span class="text-slate-600 mx-1">/</span>`;
         }
       });
       document.getElementById('sentence-preview').innerHTML = html;
@@ -1053,7 +1112,7 @@
       resetSpeed();
       updateHorseGlow();
       ghostTrails = [];
-      triggerFloatingFeedback('漏過詩句！', '#f43f5e');
+      triggerFloatingFeedback(isVocabPoem(POEMS[currentKey]) ? '漏過詞義！' : '漏過詩句！', '#f43f5e');
 
       if (hp <= 0) {
         if (spawnTimer) { clearTimeout(spawnTimer); spawnTimer = null; }
@@ -1085,9 +1144,6 @@
       document.getElementById('hp-bar').className = hp < 30
         ? 'bg-rose-500 h-full transition-all duration-300'
         : 'bg-gradient-to-r from-emerald-400 to-teal-400 h-full transition-all duration-300';
-      const g = currentGear();
-      document.getElementById('speed-hint').textContent =
-        `時速 ${currentSpeed.toFixed(1)} · ${g.label}`;
     }
 
     function showVictory() {
@@ -1101,14 +1157,15 @@
       document.getElementById('stat-score').textContent = `${score} 分`;
       const total = POEMS[currentKey].lines.length * 2.5;
       const acc = Math.max(10, Math.round((total / (total + mistakeCount)) * 100));
-      document.getElementById('stat-accuracy').textContent = `${acc}% (錯別字避障成功)`;
+      const accLabel = isVocabPoem(POEMS[currentKey]) ? '詞義避障成功' : '錯別字避障成功';
+      document.getElementById('stat-accuracy').textContent = `${acc}% (${accLabel})`;
       document.getElementById('report-modal').classList.remove('hidden');
     }
 
     function restartGame() {
       document.getElementById('report-modal').classList.add('hidden');
       forceWalkGear();
-      switchPoem(currentKey === 'mulan' ? 'song' : 'mulan');
+      switchPoem(currentKey === 'mulan' ? 'yangxiu' : 'mulan');
     }
 
     window.switchPoem = switchPoem;
